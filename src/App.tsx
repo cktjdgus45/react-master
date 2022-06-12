@@ -1,22 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import Router from './routes/Router';
 
 function App() {
-  const Container = styled.div`
-    background-color: ${(props) => props.theme.bgColor};
-  `;
-  const H1 = styled.h1`
-    color:${(props) => props.theme.textColor};
-  `;
-  const BUTTON = styled.button`
-    color:${(props) => props.theme.btnColor};
-  `
-  return (
-    <Container>
-      <H1>Protected</H1>
-      <BUTTON>Login</BUTTON>
-    </Container>
-  );
+  return <Router />
 }
 
 export default App;
