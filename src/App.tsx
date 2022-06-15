@@ -64,15 +64,20 @@ body{
   color:${(props) => props.theme.textColor};
 }
 
+a{
+	text-decoration:none;
+	color:inherit;
+}
+
 `
 
 function App() {
-  return (
-    <>
-      <GlobalStyle />
-      <Router />
-    </>
-  )
+	return (
+		<>
+			<GlobalStyle />
+			<Router />
+		</>
+	)
 }
 
 export default App;
