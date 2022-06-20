@@ -25,6 +25,12 @@ const Container = styled.div`
     padding: 0px 20px;
 `;
 
+const Img = styled.img`
+    width:35px;
+    height:35px;
+    margin-right:10px;
+`
+
 const Header = styled.header`
     height:10vh;
     display:flex;
@@ -49,7 +55,6 @@ const Coin = styled.li`
     }
 `;
 
-
 const Coins = () => {
     const [coins, setCoins] = useState<ICoin[]>([]);
     const [loading, setLoading] = useState(true);
@@ -62,7 +67,7 @@ const Coins = () => {
         })()
 
     }, [])
-    console.log(coins)
+
     return (
         <Container>
             <Header>
@@ -71,7 +76,12 @@ const Coins = () => {
             {loading ? <Loader>Loading...</Loader> : (<CoinsList>
                 {coins.map(coin => (
                     <Coin key={coin.id}>
-                        <Link to={`${coin.id}`}>{coin.name} &rarr;</Link>
+                        <Link
+                            to={`${coin.id}`}
+                            state={{ name: coin.name }}>
+                            <Img alt="coinImage" src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}></Img>
+                            {coin.name} &rarr;
+                        </Link>
                     </Coin>
                 )
                 )}
