@@ -41,7 +41,7 @@ const Header = styled.header`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-    background-color: ${(props) => props.theme.btnColor};
+    background-color: ${(props) => props.theme.modalColor};
     color:${(props) => props.theme.textColor};
     padding: 20px;
     margin-bottom: 10px;

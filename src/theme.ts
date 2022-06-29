@@ -1,9 +1,9 @@
 import { DefaultTheme } from 'styled-components';
 
 export const Theme: DefaultTheme = {
-    textColor: '#646FD4',
-    btnColor: '#9BA3EB',
-    bgColor: '#DBDFFD',
-    accentColor: '#242F9B',
+    textColor: '#F9F9F9',
+    modalColor: '#A27B5C',
+    bgColor: '#3F4E4F',
+    accentColor: '#2C3639',
 };
 
