@@ -191,7 +191,7 @@ const Coin = () => {
                     <Routes>
                         <Route path="price" element={<Price />}>
                         </Route>
-                        <Route path="chart" element={<Chart />}>
+                        <Route path="chart" element={<Chart coinId={coinId} />}>
                         </Route>
                     </Routes>
                 </>
