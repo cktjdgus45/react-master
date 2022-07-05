@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useLocation, useParams, Routes, Route, Link, useMatch } from 'react-router-dom';
+import { useLocation, useParams, Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoinInfo, fetchCoinTickers } from '../api';
 import Chart from "./Chart";
 import Price from "./Price";
 import { Helmet } from 'react-helmet-async';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 interface RouteState {
     name: string;
@@ -83,6 +84,19 @@ const Tabs = styled.div`
   background-color: #3F4E4F;
 `;
 
+const Button = styled.button`
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    font-size: 20px;
+    border-radius: 15px;
+    border: none;
+    color: ${(props) => props.theme.bgColor};
+    &:hover{
+        color: ${(props) => props.theme.accentColor};
+    }
+`
+
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
@@ -139,6 +153,7 @@ const Header = styled.header`
 
 const Coin = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const state = location.state as RouteState;
     const { coinId } = useParams() as unknown as RouteParams;
     const priceMatch = useMatch("/:coinId/price");
@@ -158,7 +173,11 @@ const Coin = () => {
                 </title>
             </Helmet>
             <Header>
+                <></>
                 <Title>
+                    <Button onClick={() => navigate(-1)}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </Button>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
             </Header>

@@ -70,6 +70,10 @@ a{
 	color:inherit;
 }
 
+button{
+	cursor: pointer;
+}
+
 `
 
 function App() {
