@@ -173,8 +173,10 @@ const Coin = () => {
             <Header>
                 <></>
                 <Title>
-                    <Button onClick={() => navigate(-1)}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
+                    <Button>
+                        <Link to={'/'}>
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </Link>
                     </Button>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
