@@ -106,7 +106,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   border-radius: 10px;
   background-color: ${(props) => props.theme.modalColor};
   color: ${(props) =>
-        props.isActive ? props.theme.accentColor : props.theme.textColor};
+        props.isActive ? props.theme.textColor : props.theme.accentColor};
   a {
     display: block;
   }
@@ -161,9 +161,7 @@ const Coin = () => {
     const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(["tickers", coinId],
         () => fetchCoinTickers(coinId),
-        {
-            refetchInterval: 5000,
-        });
+    );
     const loading = infoLoading || tickersLoading;
     return (
         <Container>
@@ -219,7 +217,7 @@ const Coin = () => {
                         </Tab>
                     </Tabs>
                     <Routes>
-                        <Route path="price" element={<Price />}>
+                        <Route path="price" element={<Price coinId={coinId} />}>
                         </Route>
                         <Route path="chart" element={<Chart coinId={coinId} />}>
                         </Route>

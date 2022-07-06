@@ -19,8 +19,7 @@ interface IHistroical {
 }
 
 const Chart = ({ coinId }: ChartProps) => {
-    console.log(coinId)
-    const { isLoading, data } = useQuery<IHistroical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId))
+    const { isLoading, data } = useQuery<IHistroical[]>(["chart", "ohlcv", coinId], () => fetchCoinHistory(coinId))
     return (
         <>
             {isLoading ? "Loading Chart..." : (
