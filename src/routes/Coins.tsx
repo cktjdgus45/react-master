@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoins } from '../api';
 import { Helmet } from 'react-helmet-async';
+import { useSetRecoilState } from 'recoil';
+import { isDarkState } from '../atom';
 
 interface ICoin {
     id: string,
@@ -41,6 +43,16 @@ const Header = styled.header`
     align-items: center;
 `;
 
+const ToggleButton = styled.button`
+    position:absolute;
+    left: 1.5rem;
+    top: 1.5rem;
+    border: none;
+    background-color: ${(props) => props.theme.modalColor};
+    border-radius: 15px;
+    padding: 10px;
+`
+
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
@@ -58,15 +70,21 @@ const Coin = styled.li`
     }
 `;
 
+
+
 const Coins = () => {
     const { isLoading, data } = useQuery<[ICoin]>("allCoins", fetchCoins);
-
+    const setThemeState = useSetRecoilState(isDarkState);
+    const toggleTheme = () => {
+        setThemeState((themeState) => !themeState);
+    }
     return (
         <Container>
             <Helmet>
                 <title>Coins</title>
             </Helmet>
             <Header>
+                <ToggleButton onClick={toggleTheme}>Toggle Mode</ToggleButton>
                 <Title>Coins</Title>
             </Header>
             {isLoading ? <Loader>Loading...</Loader> : (<CoinsList>

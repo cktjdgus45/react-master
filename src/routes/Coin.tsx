@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useLocation, useParams, Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom';
+import { useLocation, useParams, Routes, Route, Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoinInfo, fetchCoinTickers } from '../api';
 import Chart from "./Chart";
@@ -71,6 +70,8 @@ interface PriceData {
         };
     };
 }
+
+
 const Loader = styled.span`
     text-align: center;
     display:block;
@@ -153,7 +154,6 @@ const Header = styled.header`
 
 const Coin = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const state = location.state as RouteState;
     const { coinId } = useParams() as unknown as RouteParams;
     const priceMatch = useMatch("/:coinId/price");

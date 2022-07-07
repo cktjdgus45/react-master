@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme';
+import { isDarkState } from './atom';
+import { useRecoilValue } from 'recoil';
+
 
 const GlobalStyle = createGlobalStyle`
 @import url('//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css');
@@ -77,11 +82,15 @@ button{
 `
 
 function App() {
+	const isDark = useRecoilValue(isDarkState);
 	return (
 		<>
-			<GlobalStyle />
-			<Router />
-			<ReactQueryDevtools initialIsOpen={true} />
+			<ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+				<GlobalStyle />
+				<Router />
+				<ReactQueryDevtools initialIsOpen={true} />
+			</ThemeProvider>
+
 		</>
 	)
 }
