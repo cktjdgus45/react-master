@@ -1,11 +1,8 @@
 import React, { } from 'react';
 import { createGlobalStyle } from 'styled-components';
-import Router from './routes/Router';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from './theme';
-import { isDarkState } from './atom';
-import { useRecoilValue } from 'recoil';
+import { lightTheme } from './theme';
+import ToDoList from './ToDoList';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -82,13 +79,11 @@ button{
 `
 
 function App() {
-	const isDark = useRecoilValue(isDarkState);
 	return (
 		<>
-			<ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+			<ThemeProvider theme={lightTheme}>
 				<GlobalStyle />
-				<Router />
-				<ReactQueryDevtools initialIsOpen={true} />
+				<ToDoList />
 			</ThemeProvider>
 
 		</>
