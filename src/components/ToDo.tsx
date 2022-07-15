@@ -17,9 +17,9 @@ const ToDo = ({ text, category, id }: ITodo) => {
         <>
             <li>
                 <span>{text}</span>
+                {category !== "TO_DO" && <button onClick={() => onClick("TO_DO")}>TO_DO</button>}
                 {category !== "DOING" && <button onClick={() => onClick("DOING")}>Doing</button>}
                 {category !== "DONE" && <button onClick={() => onClick("DONE")}>DONE</button>}
-                {category !== "TO_DO" && <button onClick={() => onClick("TO_DO")}>TO_DO</button>}
             </li>
         </>
     )
