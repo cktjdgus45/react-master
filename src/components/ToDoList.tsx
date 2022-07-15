@@ -9,7 +9,7 @@ import ToDo from './ToDo';
 
 const ToDoList = () => {
     const todos = useRecoilValue(todoState);
-
+    console.log(todos)
     return (
         <>
             <h1>To Dos</h1>
