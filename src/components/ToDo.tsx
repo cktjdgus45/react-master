@@ -8,7 +8,6 @@ const ToDo = ({ text, category, id }: ITodo) => {
     const onClick = (newCategory: ITodo['category']) => {
         setTodos(oldTodos => {
             const targetIndex = oldTodos.findIndex(todo => todo.id === id);
-            const oldToDo = oldTodos[targetIndex];
             const newToDo = { text, id, category: newCategory };
             return [...oldTodos.slice(0, targetIndex), newToDo, ...oldTodos.slice(targetIndex + 1)]
         })

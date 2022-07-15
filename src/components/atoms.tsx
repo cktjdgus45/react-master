@@ -7,8 +7,8 @@ export interface ITodo {
 }
 
 export const categoryState = atom({
-    key:'category',
-    default:'TO_DO'
+    key: 'category',
+    default: 'TO_DO'
 })
 
 export const todoState = atom<ITodo[]>({
@@ -20,10 +20,16 @@ export const toDoSelector = selector({
     key: "toDoSelector",
     get: ({ get, getCallback }) => {
         const todos = get(todoState);
-        return [
-            todos.filter(todo => todo.category === 'TO_DO'),
-            todos.filter(todo => todo.category === 'DOING'),
-            todos.filter(todo => todo.category === 'DONE')
-        ]
-    }
+        const category = get(categoryState);
+        switch (category) {
+            case 'TO_DO':
+                return todos.filter((todo) => todo.category === "TO_DO");
+            case 'DOING':
+                return todos.filter((todo) => todo.category === "DOING");
+            case 'DONE':
+                return todos.filter((todo) => todo.category === "DONE");
+            default:
+                return todos;
+        }
+    },
 })
