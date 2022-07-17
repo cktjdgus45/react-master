@@ -2,7 +2,6 @@ import React, { } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
-import ToDoList from './components/ToDoList';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -83,7 +82,6 @@ function App() {
 		<>
 			<ThemeProvider theme={lightTheme}>
 				<GlobalStyle />
-				<ToDoList />
 			</ThemeProvider>
 
 		</>
