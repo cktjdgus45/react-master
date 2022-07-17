@@ -24,7 +24,7 @@ export const todoState = atom<ITodo[]>({
 
 export const toDoSelector = selector({
     key: "toDoSelector",
-    get: ({ get, getCallback }) => {
+    get: ({ get }) => {
         const todos = get(todoState);
         const category = get(categoryState);
         switch (category) {

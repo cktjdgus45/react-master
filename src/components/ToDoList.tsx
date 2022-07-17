@@ -13,7 +13,6 @@ const ToDoList = () => {
     const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
         setCategory(event.currentTarget.value as any);
     }
-    console.log(todos)
     return (
         <>
             <h1>To Dos</h1>
