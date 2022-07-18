@@ -12,14 +12,12 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </HelmetProvider>
-    </RecoilRoot>
-  </React.StrictMode>
+  <RecoilRoot>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </HelmetProvider>
+  </RecoilRoot>
 );
 
