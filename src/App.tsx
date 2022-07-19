@@ -1,9 +1,8 @@
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { todoState } from './atoms';
 import Board from './components/Board';
-import DragabbleCard from './components/DragabbleCard';
 
 const Wrapper = styled.div`
 	display:flex;
@@ -28,13 +27,20 @@ const Boards = styled.div`
 
 function App() {
 	const [todos, setTodos] = useRecoilState(todoState);
-	const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
-		// setTodos(oldTodos => {
-		// 	const copyTodos = [...oldTodos];
-		// 	copyTodos.splice(source.index, 1);
-		// 	copyTodos.splice(destination?.index as number, 0, draggableId);
-		// 	return copyTodos;
-		// })
+	const onDragEnd = (info: DropResult) => {
+		console.log(info);
+		const { destination, draggableId, source } = info;
+		if (destination?.droppableId === source.droppableId) {
+			setTodos(allTodo => {
+				const boardCopy = [...allTodo[source.droppableId]];
+				boardCopy.splice(source.index, 1);
+				boardCopy.splice(destination.index, 0, draggableId);
+				return {
+					...allTodo,
+					[source.droppableId]: boardCopy
+				};
+			})
+		}
 	}
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
