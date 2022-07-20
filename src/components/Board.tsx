@@ -32,6 +32,11 @@ const Area = styled.div<IAreaProps>`
 const Form = styled.form`
     width:100%;
 `
+const Input = styled.input`
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 4px;
+`
 
 interface IAreaProps {
     isDraggingOver: boolean;
@@ -68,7 +73,7 @@ const Board = ({ todos, boardId }: IBoardProps) => {
         <Wrapper>
             <Title>{boardId}</Title>
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></input>
+                <Input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></Input>
             </Form>
             <Droppable droppableId={boardId}>
                 {(provided, snapshot) => (

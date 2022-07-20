@@ -72,6 +72,10 @@ a {
   text-decoration:none;
   color:inherit;
 }
+input{
+  border: none;
+  outline: none;
+}
 `;
 
 
