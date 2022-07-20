@@ -2,6 +2,8 @@ import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
+import { useForm } from "react-hook-form";
+import { ITodo } from '../atoms';
 
 const Wrapper = styled.div`
 	padding: 20px 10px;
@@ -21,6 +23,14 @@ const Title = styled.h1`
     text-align: center;
     height: 50px;
 `
+const Area = styled.div<IAreaProps>`
+    background-color: ${props => props.isDraggingOver ? "#F4DFD0" : props.draggingFromThisWith ? "#FAEEE0" : "#CDBBA7"};
+    flex-grow: 1;
+    transition: background-color .3s ease-in-out;
+`
+const Form = styled.form`
+    width:100%;
+`
 
 interface IAreaProps {
     isDraggingOver: boolean;
@@ -28,26 +38,36 @@ interface IAreaProps {
 }
 
 interface IBoardProps {
-    todos: string[];
+    todos: ITodo[];
     boardId: string;
 }
 
-const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#F4DFD0" : props.draggingFromThisWith ? "#FAEEE0" : "#CDBBA7"};
-    flex-grow: 1;
-    transition: background-color .3s ease-in-out;
-`
+interface IForm {
+    todo: string;
+}
 
 
 const Board = ({ todos, boardId }: IBoardProps) => {
+    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<IForm>();
+    const onSubmit = (data: IForm) => {
+        console.log(data);
+        setValue('todo', '');
+    }
     return (
         <Wrapper>
             <Title>{boardId}</Title>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                <input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></input>
+            </Form>
             <Droppable droppableId={boardId}>
                 {(provided, snapshot) => (
                     <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
                         {todos.map((todo, index) => (
-                            <DragabbleCard key={todo} todo={todo} index={index} />
+                            <DragabbleCard
+                                key={todo.id}
+                                todoId={todo.id}
+                                todoText={todo.text}
+                                index={index} />
                         ))}
                         {provided.placeholder}
                     </Area>
