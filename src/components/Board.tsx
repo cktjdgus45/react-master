@@ -36,6 +36,7 @@ const Input = styled.input`
     width: 100%;
     padding: 5px 10px;
     border-radius: 4px;
+    margin-bottom: 5px;
 `
 
 interface IAreaProps {
@@ -83,7 +84,8 @@ const Board = ({ todos, boardId }: IBoardProps) => {
                                 key={todo.id}
                                 todoId={todo.id}
                                 todoText={todo.text}
-                                index={index} />
+                                index={index}
+                                boardId={boardId} />
                         ))}
                         {provided.placeholder}
                     </Area>
