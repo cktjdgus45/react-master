@@ -21,6 +21,11 @@ const Boards = styled.div`
 	grid-template-columns: repeat(3,1fr);
 `
 
+const Empty = styled.div`
+	width: 100%;
+	height:100%;
+	display: block;
+`
 
 
 
@@ -28,7 +33,7 @@ const Boards = styled.div`
 function App() {
 	const [todos, setTodos] = useRecoilState(todoState);
 	const onDragEnd = (info: DropResult) => {
-		const { destination, draggableId, source } = info;
+		const { destination, source } = info;
 		if (!destination) return;
 		if (destination?.droppableId === source.droppableId) {
 			setTodos(allBoards => {
@@ -41,6 +46,17 @@ function App() {
 					[source.droppableId]: boardCopy
 				};
 			})
+		}
+		if (destination?.droppableId === 'trashBoard') {
+			setTodos(allBoards => {
+				const sourceBoard = [...allBoards[source.droppableId]];
+				sourceBoard.splice(source.index, 1);
+				return {
+					...allBoards,
+					[source.droppableId]: sourceBoard
+				}
+			})
+			return;
 		}
 		if (destination?.droppableId !== source.droppableId) {
 			setTodos(allBoards => {
@@ -57,11 +73,15 @@ function App() {
 			})
 		}
 	}
+
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
 			<Wrapper>
 				<Boards>
-					{Object.keys(todos).map(boardId => <Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
+					{Object.keys(todos).map(boardId =>
+						<Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
+					<Empty></Empty>
+					<Board key='trashBoard' boardId='trashBoard' />
 				</Boards>
 			</Wrapper>
 		</DragDropContext>

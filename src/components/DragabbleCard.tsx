@@ -34,7 +34,6 @@ const DragabbleCard = ({ todoId, todoText, index, boardId }: IDragabbleCardProps
     const setTodos = useSetRecoilState(todoState);
 
     const onClick = (boardId: string) => {
-        console.log(boardId);
         setTodos(allBoard => {
             const copyBoard = [...allBoard[boardId]];
             const arr = copyBoard.filter(todo => todo.id !== todoId);

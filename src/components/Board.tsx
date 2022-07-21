@@ -45,7 +45,7 @@ interface IAreaProps {
 }
 
 interface IBoardProps {
-    todos: ITodo[];
+    todos?: ITodo[];
     boardId: string;
 }
 
@@ -73,24 +73,36 @@ const Board = ({ todos, boardId }: IBoardProps) => {
     return (
         <Wrapper>
             <Title>{boardId}</Title>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></Input>
-            </Form>
-            <Droppable droppableId={boardId}>
-                {(provided, snapshot) => (
-                    <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
-                        {todos.map((todo, index) => (
-                            <DragabbleCard
-                                key={todo.id}
-                                todoId={todo.id}
-                                todoText={todo.text}
-                                index={index}
-                                boardId={boardId} />
-                        ))}
-                        {provided.placeholder}
-                    </Area>
-                )}
-            </Droppable>
+            {boardId !== 'trashBoard' ?
+                <>
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></Input>
+                    </Form>
+                    <Droppable droppableId={boardId}>
+                        {(provided, snapshot) => (
+                            <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
+                                {todos?.map((todo, index) => (
+                                    <DragabbleCard
+                                        key={todo.id}
+                                        todoId={todo.id}
+                                        todoText={todo.text}
+                                        index={index}
+                                        boardId={boardId} />
+                                ))}
+                                {provided.placeholder}
+                            </Area>
+                        )}
+                    </Droppable>
+                </>
+                :
+                <Droppable droppableId={boardId}>
+                    {(provided, snapshot) => ((
+                        <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
+
+                        </Area>
+                    ))}
+                </Droppable>
+            }
         </Wrapper>
     )
 }
