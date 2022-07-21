@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 	background-color: ${props => props.theme.boardColor};
 	border-radius:5px ;
     width:300px;
-	min-height: 300px;
+	height: 300px;
     display: flex;
     flex-direction: column;
 `;
