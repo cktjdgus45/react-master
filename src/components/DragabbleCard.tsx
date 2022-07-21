@@ -2,7 +2,8 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+
 import { useSetRecoilState } from 'recoil';
 import { todoState } from '../atoms';
 
@@ -55,7 +56,7 @@ const DragabbleCard = ({ todoId, todoText, index, boardId }: IDragabbleCardProps
                     ref={provided.innerRef}
                 >
                     {todoText}
-                    <FontAwesomeIcon style={style} onClick={() => onClick(boardId)} icon={faCoffee}></FontAwesomeIcon>
+                    <FontAwesomeIcon style={style} onClick={() => onClick(boardId)} icon={faXmark}></FontAwesomeIcon>
                 </Card>)}
         </Draggable>
     )

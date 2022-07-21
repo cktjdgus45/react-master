@@ -5,8 +5,11 @@ import DragabbleCard from './DragabbleCard';
 import { useForm } from "react-hook-form";
 import { ITodo, todoState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled.div`
+    position:relative;
 	padding: 20px 10px;
 	padding-top:10px;
 	background-color: ${props => props.theme.boardColor};
@@ -39,6 +42,27 @@ const Input = styled.input`
     margin-bottom: 5px;
 `
 
+const CloseBoardButton = styled.button`
+    position: absolute;
+    font-size:15px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 5px;
+    top: 5px;
+    color:${props => props.theme.textColor};
+    border: none;
+    background-color: inherit;
+	border-radius:5px ;
+    transition: transform .3s ease-in-out;
+    &:hover{
+        transform: scale(1.3);
+    }
+`
+
 interface IAreaProps {
     isDraggingOver: boolean;
     draggingFromThisWith: boolean;
@@ -56,7 +80,7 @@ interface IForm {
 
 const Board = ({ todos, boardId }: IBoardProps) => {
     const setToDos = useSetRecoilState(todoState);
-    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<IForm>();
+    const { register, handleSubmit, setValue } = useForm<IForm>();
     const onSubmit = ({ todo }: IForm) => {
         const newToDo: ITodo = {
             id: Date.now(),
@@ -70,8 +94,18 @@ const Board = ({ todos, boardId }: IBoardProps) => {
         })
         setValue('todo', '');
     }
+    const onDeleteBoard = () => {
+        setToDos(allBoards => {
+            const targetBoard = { ...allBoards, [boardId]: allBoards[boardId] };
+            delete targetBoard[boardId];
+            return targetBoard;
+        })
+    }
     return (
         <Wrapper>
+            <CloseBoardButton onClick={onDeleteBoard}>
+                <FontAwesomeIcon icon={faXmark} />
+            </CloseBoardButton>
             <Title>{boardId}</Title>
             {boardId !== 'trashBoard' ?
                 <>
