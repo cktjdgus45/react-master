@@ -69,7 +69,7 @@ interface IAreaProps {
 }
 
 interface IBoardProps {
-    todos?: ITodo[];
+    todos: ITodo[];
     boardId: string;
 }
 
@@ -107,7 +107,7 @@ const Board = ({ todos, boardId }: IBoardProps) => {
                 <FontAwesomeIcon icon={faXmark} />
             </CloseBoardButton>
             <Title>{boardId}</Title>
-            {boardId !== 'trashBoard' ?
+            {
                 <>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Input {...register('todo', { required: true })} type="text" placeholder={`Add task on ${boardId}`}></Input>
@@ -128,14 +128,7 @@ const Board = ({ todos, boardId }: IBoardProps) => {
                         )}
                     </Droppable>
                 </>
-                :
-                <Droppable droppableId={boardId}>
-                    {(provided, snapshot) => ((
-                        <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
 
-                        </Area>
-                    ))}
-                </Droppable>
             }
         </Wrapper>
     )

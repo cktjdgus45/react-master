@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { todoState } from './atoms';
 import Board from './components/Board';
+import Trash from './components/Trash';
 
 const Wrapper = styled.div`
 	display:flex;
@@ -72,7 +73,7 @@ function App() {
 				};
 			})
 		}
-		if (destination?.droppableId === 'trashBoard') {
+		if (destination?.droppableId === 'trash') {
 			setTodos(allBoards => {
 				const sourceBoard = [...allBoards[source.droppableId]];
 				sourceBoard.splice(source.index, 1);
@@ -109,8 +110,8 @@ function App() {
 					{Object.keys(todos).map(boardId =>
 						<Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
 					<Empty></Empty>
-					<Board key='trashBoard' boardId='trashBoard' />
 				</Boards>
+				<Trash boardId='trash' />
 			</Wrapper>
 		</DragDropContext>
 	)
