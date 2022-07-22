@@ -13,15 +13,15 @@ interface IAreaProps {
 }
 
 const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#F4DFD0" : "#F0EBE3"};
+    background-color: ${props => props.isDraggingOver ? props.theme.isCardDraggingOver : props.theme.cardColor};
     transition: background-color .3s ease-in-out;
     font-size: 2rem;
-    width: 90px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     position:fixed;
-    right: 1.3px;
-    bottom: 1.3px;
+    right: 2rem;
+    bottom: 2rem;
     z-index: 99999;
     text-align: center;
     transition: transform .3s ease-in-out;
@@ -31,7 +31,7 @@ const Area = styled.div<IAreaProps>`
 `
 
 const style = {
-    transform: 'translateY(24px)'
+    transform: 'translateY(10px)'
 }
 
 const Trash = ({ boardId }: ITrashProps) => {

@@ -5,6 +5,10 @@ const { persistAtom } = recoilPersist({
     key: 'recoil-persist',
     storage: localStorage
 })
+const { persistAtom: AtomStorj } = recoilPersist({
+    key: 'atom-storj',
+    storage: localStorage
+})
 
 interface IToDoState {
     [key: string]: ITodo[];
@@ -23,6 +27,12 @@ export const todoState = atom<IToDoState>({
     effects_UNSTABLE: [persistAtom],
 
 });
+
+export const themeState = atom({
+    key: 'theme',
+    default: false,
+    effects_UNSTABLE: [AtomStorj]
+})
 
 
 

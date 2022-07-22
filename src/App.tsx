@@ -1,10 +1,89 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { todoState } from './atoms';
 import Board from './components/Board';
+import Nav from './components/Nav';
 import Trash from './components/Trash';
+import { createGlobalStyle, } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme';
+import { themeState } from './atoms';
+
+
+const GlobalStyle = createGlobalStyle`
+  @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+  * { font-family: 'Spoqa Han Sans Neo', 'sans-serif'; }
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, menu, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+main, menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, main, menu, nav, section {
+  display: block;
+}
+/* HTML5 hidden-attribute fix for newer browsers */
+*[hidden] {
+    display: none;
+}
+body {
+  line-height: 1;
+}
+menu, ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-weight: 300;
+  font-family: 'Source Sans Pro', sans-serif;
+  color:${(props) => props.theme.textColor};
+  line-height: 1.2;
+  background-color: ${props => props.theme.bgColor};
+}
+a {
+  text-decoration:none;
+  color:inherit;
+}
+input{
+  border: none;
+  outline: none;
+}
+
+button{
+  cursor: pointer;
+}
+
+`;
 
 const Wrapper = styled.div`
 	display:flex;
@@ -12,6 +91,7 @@ const Wrapper = styled.div`
 	max-width: 680px;
 	width: 100%;
 	margin: 0 auto;
+	margin-top: 4rem;
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
@@ -30,34 +110,10 @@ const Empty = styled.div`
 	display: block;
 `
 
-const Form = styled.form`
-	width: 100%;
-	margin-top: 100px;
-	margin-bottom: 30px;
-box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-`
-const Input = styled.input`
-	width: 100%;
-	padding: 5px 3px;
-`
-
-interface IForm {
-	board: string;
-}
 
 function App() {
 	const [todos, setTodos] = useRecoilState(todoState);
-	const setBoard = useSetRecoilState(todoState);
-	const { register, handleSubmit, setValue } = useForm<IForm>();
-	const onSubmit = ({ board }: IForm) => {
-		setBoard(current => {
-			return {
-				...current,
-				[board]: []
-			}
-		})
-		setValue('board', '');
-	}
+	const isDark = useRecoilValue(themeState);
 	const onDragEnd = (info: DropResult) => {
 		const { destination, source } = info;
 		if (!destination) return;
@@ -101,19 +157,21 @@ function App() {
 	}
 
 	return (
-		<DragDropContext onDragEnd={onDragEnd}>
-			<Wrapper>
-				<Form onSubmit={handleSubmit(onSubmit)}>
-					<Input type="text" placeholder='add Board' {...register('board', { required: true })} />
-				</Form>
-				<Boards>
-					{Object.keys(todos).map(boardId =>
-						<Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
-					<Empty></Empty>
-				</Boards>
-				<Trash boardId='trash' />
-			</Wrapper>
-		</DragDropContext>
+		<ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+			<GlobalStyle />
+			<Nav />
+			<DragDropContext onDragEnd={onDragEnd}>
+				<Wrapper>
+					<Boards>
+						{Object.keys(todos).map(boardId =>
+							<Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
+						<Empty></Empty>
+					</Boards>
+					<Trash boardId='trash' />
+				</Wrapper>
+			</DragDropContext>
+
+		</ThemeProvider>
 	)
 
 }

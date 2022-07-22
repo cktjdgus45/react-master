@@ -28,7 +28,7 @@ const Title = styled.h1`
     height: 50px;
 `
 const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#F4DFD0" : props.draggingFromThisWith ? "#FAEEE0" : "#CDBBA7"};
+    background-color: ${props => props.isDraggingOver ? props.theme.isBoardNotDraggingOver : props.theme.isBoardNotDraggingOver};
     flex-grow: 1;
     transition: background-color .3s ease-in-out;
 `
@@ -65,7 +65,6 @@ const CloseBoardButton = styled.button`
 
 interface IAreaProps {
     isDraggingOver: boolean;
-    draggingFromThisWith: boolean;
 }
 
 interface IBoardProps {
@@ -114,7 +113,7 @@ const Board = ({ todos, boardId }: IBoardProps) => {
                     </Form>
                     <Droppable droppableId={boardId}>
                         {(provided, snapshot) => (
-                            <Area isDraggingOver={snapshot.isDraggingOver} draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
+                            <Area isDraggingOver={snapshot.isDraggingOver} ref={provided.innerRef} {...provided.droppableProps}>
                                 {todos?.map((todo, index) => (
                                     <DragabbleCard
                                         key={todo.id}

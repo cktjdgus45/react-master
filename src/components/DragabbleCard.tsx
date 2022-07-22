@@ -14,7 +14,7 @@ border-radius:5px ;
 padding: 10px 10px;
 width: inherit;
 margin-bottom: 5px;
-background-color: ${props => props.isDragging ? "#FFE7BF" : props.theme.bgColor};
+background-color: ${props => props.isDragging ? props.theme.isCardDraggingOver : props.theme.isCardNotDraggingOver};
 box-shadow:${props => props.isDragging ? "1px 4px 1px 5px" : ""}
 `;
 
