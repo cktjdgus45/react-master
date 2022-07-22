@@ -43,6 +43,21 @@ footer, header, hgroup, main, menu, nav, section {
 *[hidden] {
     display: none;
 }
+html{
+	&::-webkit-scrollbar{
+        width: 0.0000000001px;
+	} 
+	&::-webkit-scrollbar-thumb{
+        opacity:0;
+        pointer-events: none;
+        z-index: -99999;
+	}
+	&::-webkit-scrollbar-track{
+        opacity:0;
+        pointer-events:none;
+        z-index : -99999;
+	} 
+}
 body {
   line-height: 1;
 }
@@ -92,7 +107,6 @@ const Wrapper = styled.div`
 	max-width: 680px;
 	width: 100%;
 	margin: 0 auto;
-	margin-top: 4rem;
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
@@ -100,7 +114,7 @@ const Wrapper = styled.div`
 
 const Boards = styled.div`
 	display: grid;
-	height: 100vh;
+	height: 80vh;
 	gap: 10px;
 	grid-template-columns: repeat(3,1fr);
 	grid-template-rows: repeat(3,1fr);
