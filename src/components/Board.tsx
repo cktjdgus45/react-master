@@ -18,6 +18,7 @@ const Wrapper = styled.div`
 	height: 300px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 `;
 
 const Title = styled.h1`
@@ -25,16 +26,35 @@ const Title = styled.h1`
     font-weight: bold;
     padding-bottom: 12px;
     text-align: center;
-    height: 50px;
+    height: 20%;
 `
 const Area = styled.div<IAreaProps>`
     background-color: ${props => props.isDraggingOver ? props.theme.isBoardNotDraggingOver : props.theme.isBoardNotDraggingOver};
     flex-grow: 1;
     transition: background-color .3s ease-in-out;
+    overflow-y: scroll;
+    height: 60%;
+   
+	&::-webkit-scrollbar{
+        width: 0.0000000001px;
+	} 
+	&::-webkit-scrollbar-thumb{
+        opacity:0;
+        pointer-events: none;
+        z-index: -99999;
+	}
+	&::-webkit-scrollbar-track{
+        opacity:0;
+        pointer-events:none;
+        z-index : -99999;
+	} 
 `
+
 const Form = styled.form`
     width:100%;
+    height: 20%;
 `
+
 const Input = styled.input`
     width: 100%;
     padding: 5px 10px;

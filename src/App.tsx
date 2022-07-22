@@ -33,6 +33,7 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, main, menu, nav, section {
@@ -102,12 +103,7 @@ const Boards = styled.div`
 	height: 100vh;
 	gap: 10px;
 	grid-template-columns: repeat(3,1fr);
-`
-
-const Empty = styled.div`
-	width: 100%;
-	height:100%;
-	display: block;
+	grid-template-rows: repeat(3,1fr);
 `
 
 
@@ -165,7 +161,6 @@ function App() {
 					<Boards>
 						{Object.keys(todos).map(boardId =>
 							<Board key={boardId} todos={todos[boardId]} boardId={boardId} />)}
-						<Empty></Empty>
 					</Boards>
 					<Trash boardId='trash' />
 				</Wrapper>
