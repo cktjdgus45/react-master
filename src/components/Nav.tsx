@@ -46,9 +46,10 @@ const Button = styled.button<{ isDark: boolean }>`
     border: none;
     border-radius: 50%;
     background-color: transparent;
-    transition: background 300ms ease-in-out;
+    transition: background,transform 300ms ease-in-out;
     &:hover{
         background: ${props => props.isDark ? 'hsla(0,0%,100%,.2)' : 'hsla(20,20%,70%,.2)'};
+        transform: rotate(-25deg);
     }
 `
 
