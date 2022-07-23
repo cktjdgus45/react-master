@@ -122,7 +122,6 @@ const Boards = styled.div`
 
 
 function App() {
-	console.log(test)
 	const [todos, setTodos] = useRecoilState(todoState);
 	const isDark = useRecoilValue(themeState);
 	const onDragEnd = (info: DropResult) => {
