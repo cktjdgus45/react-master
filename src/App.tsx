@@ -1,28 +1,19 @@
 import styled, { } from 'styled-components';
-import { motion } from "framer-motion"
-import { useRef } from 'react';
+import { motion, useMotionValue, useTransform } from "framer-motion"
+import { useEffect } from 'react';
 
 
 
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  background:linear-gradient(135deg,rgb(238, 0, 153),rgb(221, 0, 238));
 `;
 
-const BiggerBox = styled.div`
-    width: 600px;
-  height: 600px;
-  background-color: rgba(255,255,255,0.4);
-  border-radius: 40px;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-`
 
 const Box = styled(motion.div)`
   width: 200px;
@@ -36,17 +27,26 @@ const Box = styled(motion.div)`
 `;
 
 const boxVariants = {
-  tap: { borderRadius: "100px", scale: 1 },
   drag: { backgroundColor: 'rgba(255,255,255,0.4)' }
 }
 
 function App() {
-  const constraintRef = useRef(null);
+  const inputRange = [-700, 0, 700];
+  const outputRange = [-360, 0, 360];
+  const inputColor = [-700, 700]
+  const outputColor = [
+    "linear-gradient(135deg,rgb(255, 139, 139),rgb(235, 71, 71))",
+    "linear-gradient(135deg, rgb(122, 134, 182),rgb(73, 92, 131))",
+  ];
+  const x = useMotionValue(0);
+  const rotateZ = useTransform(x, inputRange, outputRange);
+  const background = useTransform(x, inputColor, outputColor);
+  useEffect(() => {
+    x.onChange(() => console.log(x.get()));
+  }, [x])
   return (
-    <Wrapper>
-      <BiggerBox ref={constraintRef}>
-        <Box variants={boxVariants} drag dragConstraints={constraintRef} whileTap='tap' whileDrag='drag' />
-      </BiggerBox>
+    <Wrapper style={{ background }}>
+      <Box style={{ x, rotateZ }} variants={boxVariants} drag='x' dragSnapToOrigin whileDrag='drag' />
     </Wrapper>
   )
 
