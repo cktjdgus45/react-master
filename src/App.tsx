@@ -14,29 +14,61 @@ background: linear-gradient(135deg, #e09, #d0e);
 `;
 
 const Box = styled(motion.div)`
-  width: 500px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 30%;
   background-color: #fff;
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  position: absolute;
+  top: 100px;
 `
 
 const boxVariants = {
-  initial: { opacity: 0, scale: 0 },
-  animate: { opacity: 1, scale: 1, rotateZ: 360 },
-  exit: { opacity: 0, y: 20 }
+  initial: (back: boolean) => (
+    {
+      x: back ? -500 : 500,
+      opacity: 0,
+      scale: 0
+    }
+  ),
+  animate: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 1 }
+  },
+  exit: (back: boolean) => (
+    {
+      x: back ? 500 : -500,
+      opacity: 0,
+      scale: 0,
+      transition: { duration: 1 }
+    }
+  )
 }
 
 
 function App() {
-  const [showing, setShowing] = useState(false);
-  const toggleShowing = () => setShowing(prev => !prev);
+  const [visible, setVisible] = useState(1);
+  const [back, setBack] = useState(false);
+  const goNext = () => {
+    setBack(false);
+    setVisible(prev => prev === 10 ? 10 : prev + 1)
+  };
+  const goBefore = () => {
+    setBack(true);
+    setVisible(prev => prev === 1 ? 1 : prev - 1)
+  };
   return (
     <Wrapper>
-      <button onClick={toggleShowing}>Click</button>
       <AnimatePresence>
-        {showing ? <Box variants={boxVariants} initial="initial" animate="animate" exit="exit" /> : null}
+        <Box custom={back} variants={boxVariants} initial="initial" animate="animate" exit="exit" key={visible}>{visible}</Box>
       </AnimatePresence>
+      <button onClick={goBefore}>before</button>
+      <button onClick={goNext}>next</button>
     </Wrapper>
   )
 
