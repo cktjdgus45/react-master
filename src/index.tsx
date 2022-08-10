@@ -1,4 +1,5 @@
-import { createGlobalStyle, } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { theme } from './theme';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { RecoilRoot } from 'recoil';
@@ -95,8 +96,10 @@ button{
 
 root.render(
   <RecoilRoot>
-    <GlobalStyle />
-    <App />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <App />
+    </ThemeProvider>
   </RecoilRoot>
 );
 
