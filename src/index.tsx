@@ -78,6 +78,8 @@ body {
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
   line-height: 1.2;
+  /* 잠시 scroll test를 위해 200vh 세팅 */
+  height: 200vh;
 }
 a {
   text-decoration:none;
