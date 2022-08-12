@@ -55,7 +55,7 @@ const Search = styled.span`
   }
 `;
 
-const Circle = styled.span`
+const Circle = styled(motion.span)`
     position: absolute;
     width: 5px;
     height: 5px;
@@ -93,12 +93,12 @@ const Header = () => {
                 <Items>
                     <Item>
                         <Link to='.'>
-                            Home {homeMatch && <Circle />}
+                            Home {homeMatch && <Circle layoutId='circle' />}
                         </Link>
                     </Item>
                     <Item>
                         <Link to='tv'>
-                            시리즈 {tvMatch && <Circle />}
+                            시리즈 {tvMatch && <Circle layoutId='circle' />}
                         </Link>
                     </Item>
                 </Items>
