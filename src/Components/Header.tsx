@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from "framer-motion";
-import { Link } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 
 const Nav = styled.nav`
     display: flex;
@@ -80,6 +80,10 @@ const logoVariants = {
 }
 
 const Header = () => {
+    const homeMatch = useMatch('/');
+    const tvMatch = useMatch('tv');
+    console.log(homeMatch);
+    console.log(tvMatch);
     return (
         <Nav>
             <Col>
@@ -89,12 +93,12 @@ const Header = () => {
                 <Items>
                     <Item>
                         <Link to='.'>
-                            Home <Circle />
+                            Home {homeMatch && <Circle />}
                         </Link>
                     </Item>
                     <Item>
                         <Link to='tv'>
-                            시리즈 <Circle />
+                            시리즈 {tvMatch && <Circle />}
                         </Link>
                     </Item>
                 </Items>
