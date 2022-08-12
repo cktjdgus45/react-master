@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from "framer-motion";
 import { Link, useMatch } from 'react-router-dom';
@@ -49,10 +49,13 @@ const Item = styled.li`
 `;
 
 const Search = styled.span`
-  color: white;
-  svg {
-    height: 25px;
-  }
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+    svg {
+      height: 25px;
+    }
 `;
 
 const Circle = styled(motion.span)`
@@ -65,6 +68,12 @@ const Circle = styled(motion.span)`
     bottom: -5px;
     margin: 0 auto;
     background-color: ${props => props.theme.red};
+`
+
+const Input = styled(motion.input)`
+    transform-origin: right center;
+    position: absolute;
+    left: -150px;
 `
 
 const logoVariants = {
@@ -80,10 +89,10 @@ const logoVariants = {
 }
 
 const Header = () => {
+    const [searchOpen, setSearchOpen] = useState(false);
     const homeMatch = useMatch('/');
     const tvMatch = useMatch('tv');
-    console.log(homeMatch);
-    console.log(tvMatch);
+    const toggleSearch = () => setSearchOpen(prev => !prev);
     return (
         <Nav>
             <Col>
@@ -105,7 +114,10 @@ const Header = () => {
             </Col>
             <Col>
                 <Search>
-                    <svg
+                    <motion.svg
+                        onClick={toggleSearch}
+                        animate={{ x: searchOpen ? -180 : 0 }}
+                        transition={{ type: 'linear' }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +127,8 @@ const Header = () => {
                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                             clipRule="evenodd"
                         ></motion.path>
-                    </svg>
+                    </motion.svg>
+                    <Input animate={{ scaleX: searchOpen ? 1 : 0 }} transition={{ type: 'linear' }} placeholder='제목,사람,장르' />
                 </Search>
             </Col>
         </Nav>
