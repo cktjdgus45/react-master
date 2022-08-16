@@ -3,6 +3,7 @@ import { theme } from './theme';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -80,6 +81,8 @@ body {
   line-height: 1.2;
   /* 잠시 scroll test를 위해 200vh 세팅 */
   height: 200vh;
+  color:${props => props.theme.white.darker};
+  background-color: black;
 }
 a {
   text-decoration:none;
@@ -96,12 +99,16 @@ button{
 
 `;
 
+const queryClient = new QueryClient();
+
 root.render(
   <RecoilRoot>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <App />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <App />
+      </ThemeProvider>
+    </QueryClientProvider>
   </RecoilRoot>
 );
 
