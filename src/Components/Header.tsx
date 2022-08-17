@@ -116,7 +116,7 @@ const Header = () => {
                 })
             }
         })
-    }, [scrollY]);
+    }, [scrollY, navAnimation]);
     // background-image: linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent);
     return (
         <Nav animate={navAnimation} initial={{ backgroundImage: "linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent)" }}>
