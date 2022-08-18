@@ -14,7 +14,6 @@ const Nav = styled(motion.nav)`
     width: 100%;
     font-size: 14px;
     line-height: 20px;
-    
     padding: 0 4%;
 `;
 const Col = styled.div`
@@ -105,7 +104,6 @@ const Header = () => {
     const toggleSearch = () => setSearchOpen(prev => !prev);
     useEffect(() => {
         scrollY.onChange(() => {
-            console.log(scrollY.get())
             if (scrollY.get() < 80) {
                 navAnimation.start({
                     backgroundImage: "linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent)",

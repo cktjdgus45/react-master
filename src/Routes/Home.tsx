@@ -16,13 +16,13 @@ const Loader = styled.div`
     align-items: center;
 `
 
-const Banner = styled.div<{ bgPhoto: string }>`
+const Banner = styled.div<{ bgphoto: string }>`
     display: flex;
     flex-direction: column;
     justify-content: center;
     height:100vh;
     padding: 60px;
-    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)),url(${(props) => props.bgPhoto});
+    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)),url(${(props) => props.bgphoto});
     background-size: cover;
 `
 
@@ -48,13 +48,12 @@ const Row = styled(motion.div)`
     width: 100%;
 `;
 
-const Box = styled(motion.div) <{ bgPhoto: string }>`
+const Box = styled(motion.div) <{ bgphoto: string }>`
     background-color: white;
-    background-image:url(${(props) => props.bgPhoto});
+    background-image:url(${(props) => props.bgphoto});
     background-size:cover;
     background-position:center center;
     height: 200px;
-    color: red;
     &:first-child{
         transform-origin: center left;
     }
@@ -63,28 +62,53 @@ const Box = styled(motion.div) <{ bgPhoto: string }>`
     }
 `;
 
+const Info = styled(motion.div)`
+    opacity:0;
+    padding:10px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: ${(props) => props.theme.black.lighter};
+    h4{
+        font-size: 18px;
+        text-align: center;
+    }
+`;
+
 const rowVariants = {
     hidden: {
-        x: window.outerWidth + 10,
+        x: window.outerWidth + 5,
     },
     visible: {
         x: 0,
     },
     exit: {
-        x: -window.outerWidth - 10,
+        x: -window.outerWidth - 5,
     },
 }
 
-const BoxVariants = {
+const boxVariants = {
     normal: {
         scale: 1,
     },
     hover: {
-        scale: 1.2,
-        y: -50,
+        scale: 1.3,
+        y: -80,
         transition: {
-            delay: 0.3,
-            type: "tween"
+            delay: 0.5,
+            duaration: 0.1,
+            type: "tween",
+        },
+    },
+}
+
+const infoVariants = {
+    hover: {
+        opacity: 1,
+        transition: {
+            delay: 0.5,
+            duration: 0.2,
+            type: "tween",
         }
     }
 }
@@ -110,22 +134,25 @@ const Home = () => {
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
                 <>
-                    <Banner onClick={increaseIndex} bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
+                    <Banner onClick={increaseIndex} bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
                         <Title>{data?.results[0].title}</Title>
                         <Overview>{data?.results[0].overview}</Overview>
                     </Banner>
                     <Slider>
                         <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-                            <Row transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index}>
+                            <Row transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
                                 {data?.results.slice(1).slice(offset * index, offset * index + offset).map(movie =>
                                     <Box
                                         key={movie.id}
-                                        bgPhoto={makeImagePath(movie.backdrop_path, 'w500')}
-                                        variants={BoxVariants}
+                                        bgphoto={makeImagePath(movie.backdrop_path, 'w500')}
+                                        variants={boxVariants}
                                         whileHover="hover"
                                         initial="normal"
+                                        transition={{ type: "tween" }}
                                     >
-                                        {movie.title}
+                                        <Info variants={infoVariants}>
+                                            <h4>{movie.title}</h4>
+                                        </Info>
                                     </Box>)}
                             </Row>
                         </AnimatePresence>
