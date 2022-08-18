@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { getMovies, IGetMoviesResult } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMatch, useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
     background: black;
@@ -54,6 +55,7 @@ const Box = styled(motion.div) <{ bgphoto: string }>`
     background-size:cover;
     background-position:center center;
     height: 200px;
+    cursor: pointer;
     &:first-child{
         transform-origin: center left;
     }
@@ -116,6 +118,9 @@ const infoVariants = {
 const offset = 6;
 
 const Home = () => {
+    const navigate = useNavigate();
+    const bigMovieMatch = useMatch("/movies/:movieId");
+    console.log(bigMovieMatch);
     const { data, isLoading } = useQuery<IGetMoviesResult>(['movies', 'nowPlaying'], getMovies);
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
@@ -128,8 +133,10 @@ const Home = () => {
             setIndex(prev => prev === maxIndex ? 0 : prev + 1);
         }
     }
-
     const toggleLeaving = () => setLeaving(prev => !prev);
+    const onBoxClicked = (movieId: number) => {
+        navigate(`/movies/${movieId}`);
+    }
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
@@ -143,12 +150,14 @@ const Home = () => {
                             <Row transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
                                 {data?.results.slice(1).slice(offset * index, offset * index + offset).map(movie =>
                                     <Box
+                                        layoutId={movie.id + ""}
                                         key={movie.id}
                                         bgphoto={makeImagePath(movie.backdrop_path, 'w500')}
                                         variants={boxVariants}
                                         whileHover="hover"
                                         initial="normal"
                                         transition={{ type: "tween" }}
+                                        onClick={() => onBoxClicked(movie.id)}
                                     >
                                         <Info variants={infoVariants}>
                                             <h4>{movie.title}</h4>
@@ -157,6 +166,24 @@ const Home = () => {
                             </Row>
                         </AnimatePresence>
                     </Slider>
+                    <AnimatePresence>
+                        {bigMovieMatch ?
+                            <motion.div
+                                layoutId={bigMovieMatch.params.movieId}
+                                style={{
+                                    position: "absolute",
+                                    width: "40vw",
+                                    height: "80vh",
+                                    backgroundColor: "red",
+                                    top: 50,
+                                    left: 0,
+                                    right: 0,
+                                    margin: "0 auto",
+                                }}></motion.div>
+                            : null
+                        }
+
+                    </AnimatePresence>
                 </>
             }
         </Wrapper>
