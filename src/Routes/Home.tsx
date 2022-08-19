@@ -90,11 +90,36 @@ const BigMovie = styled(motion.div)`
     position: absolute;
     height: 80vh;
     width: 40vw;
-    
     left: 0;
     right: 0;
     margin: 0 auto;
+    background-color : ${props => props.theme.black.lighter};
 `;
+
+const BigCover = styled.div`
+    width: 100%;
+    background-size:cover;
+    background-position:center center;
+    height:400px;
+    border-radius: 15px;
+    overflow: hidden;
+`;
+
+const BigTitle = styled.h3`
+    color:${(props) => props.theme.white.lighter};
+    font-size: 36px;
+    position:relative;
+    top: -60px;
+    padding: 20px;
+`;
+
+const BigOverview = styled.p`
+    padding: 20px;
+    color: ${props => props.theme.white.lighter};
+    position: relative;
+    top: -60px;
+`;
+
 
 const rowVariants = {
     hidden: {
@@ -158,6 +183,8 @@ const Home = () => {
     const onBoxClicked = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
+    const clickedMovie = bigMovieMatch?.params.movieId && data?.results.find(movie => String(movie.id) === bigMovieMatch.params.movieId);
+    console.log(clickedMovie);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
@@ -192,7 +219,15 @@ const Home = () => {
                             <>
                                 <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
                                 <BigMovie layoutId={bigMovieMatch.params.movieId} style={{ top: scrollY.get() + 100 }}>
-                                    here
+                                    {
+                                        clickedMovie && (
+                                            <>
+                                                <BigCover style={{ backgroundImage: `linear-gradient(to top,black,transparent),url(${makeImagePath(clickedMovie.backdrop_path, 'w500')})` }} />
+                                                <BigTitle>{clickedMovie.title}</BigTitle>
+                                                <BigOverview>{clickedMovie.overview}</BigOverview>
+                                            </>
+                                        )
+                                    }
                                 </BigMovie>
                             </>
                             : null
