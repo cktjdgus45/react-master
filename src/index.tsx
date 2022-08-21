@@ -11,7 +11,6 @@ const root = ReactDOM.createRoot(
 
 const GlobalStyle = createGlobalStyle`
   @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
-  * { font-family: 'Spoqa Han Sans Neo', 'sans-serif'; }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -77,12 +76,13 @@ table {
 }
 body {
   font-weight: 300;
-  font-family: 'Source Sans Pro', sans-serif;
   line-height: 1.2;
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif';
   /* 잠시 scroll test를 위해 200vh 세팅 */
   height: 200vh;
   color:${props => props.theme.white.darker};
   background-color: black;
+  overflow-x: hidden;
 }
 a {
   text-decoration:none;
