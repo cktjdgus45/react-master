@@ -227,11 +227,17 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
     const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getCasts(+movieId));
     const { data: relatedMovies } = useQuery<IGetRelatedMovie>(['movies', 'related'], () => getRelatedMovie(+movieId));
     const casts = castData?.cast.slice(0, 4);
-    const relateMovies = relatedMovies?.results.slice(0, 10);
+    const relateMovies = relatedMovies?.results.slice(0, 12);
+
+    const sliceOverView = (overview: string) => {
+        let words = overview.substring(0, overview.lastIndexOf(' ') / 4);
+        words = words.slice(0, words.lastIndexOf('! ')) + '..';
+        return words;
+    }
     console.log(relatedMovies);
 
     return (
-        <MovieDetailWrapper initial={{ opacity: 0, }} animate={{ opacity: 1, }} exit={{ opacity: 0, }}>
+        <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
             <BigMovie layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
                 {
@@ -309,7 +315,7 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                                     )}
                                                     <p>{item.release_date.split('-')[0]}</p>
                                                 </TimeInfo>
-                                                <BigOverview>{item.overview}</BigOverview>
+                                                <BigOverview>{sliceOverView(item.overview)}</BigOverview>
                                             </Content>
                                         ))}
                                     </RelatedContents>
