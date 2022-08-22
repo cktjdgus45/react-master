@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getCasts, getMovieDetail, IGetCasts, IGetMovieDetailResult, IMovie } from '../api';
+import { getCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetMovieDetailResult, IGetRelatedMovie, IMovie } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -197,16 +197,16 @@ const Content = styled.div`
     border-radius: 3%;
 `;
 
-const Poster = styled.div`
+const Poster = styled.div<{ bg: string }>`
     position: relative;
     width: 100%;
     height: 225px;
-    background-image: url('https://image.tmdb.org/t/p/w500/p1F51Lvj3sMopG948F5HsBbl43C.jpg');
+    background-image: url(${props => props.bg});
     background-position: center center;
     background-size: cover;
 `
 
-const Runtime = styled.h3`
+const SmallTitle = styled.h3`
     position: absolute;
     right: 0;
     top: 0;
@@ -225,7 +225,10 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
     const { scrollY } = useViewportScroll();
     const { data } = useQuery<IGetMovieDetailResult>(['movies', 'detail'], () => getMovieDetail(+movieId));
     const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getCasts(+movieId));
+    const { data: relatedMovies } = useQuery<IGetRelatedMovie>(['movies', 'related'], () => getRelatedMovie(+movieId));
     const casts = castData?.cast.slice(0, 4);
+    const relateMovies = relatedMovies?.results.slice(0, 10);
+    console.log(relatedMovies);
 
     return (
         <MovieDetailWrapper initial={{ opacity: 0, }} animate={{ opacity: 1, }} exit={{ opacity: 0, }}>
@@ -250,10 +253,14 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                     <InfoColumn>
                                         <TimeInfo>
                                             <p>{data.release_date.split('-')[0]}</p>
-                                            <Age id="maturity-rating-976" viewBox="0 0 100 100">
-                                                <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
-                                                </path>
-                                            </Age>
+                                            {data.vote_count > 1500 ? (
+                                                <Age id="maturity-rating-978" viewBox="0 0 100 100"><path id="FIll---Red" fill="#C52E37" d="M88.728 100H11.27C5.043 100 0 94.957 0 88.73V11.274C0 5.048 5.043 0 11.27 0h77.458C94.954 0 100 5.048 100 11.274V88.73c0 6.227-5.046 11.27-11.272 11.27"></path><path id="18" fill="#FFFFFE" d="M81.473 15.482c.846 0 1.534.687 1.534 1.533v22.099c0 2.036-.283 3.563-.852 4.581-.568 1.02-1.542 1.947-2.918 2.784l-4.581 2.431 4.58 2.156c.777.417 1.424.834 1.93 1.254.51.42.917.931 1.215 1.528.298.6.507 1.32.626 2.157.12.84.182 1.858.182 3.058v23.533c0 .846-.686 1.533-1.533 1.533H43.21a1.536 1.536 0 01-1.535-1.533V59.063c0-2.218.255-3.896.763-5.036.51-1.135 1.538-2.127 3.1-2.961l4.582-2.156-4.581-2.43c-1.376-.838-2.35-1.778-2.92-2.832-.565-1.046-.855-2.563-.855-4.534V17.015c0-.846.688-1.533 1.534-1.533zm-45.008 0V84.13H21.103V34.62h-5.485l7.104-19.136h13.743zm29.913 39.176h-7.89c-.845 0-1.534.686-1.534 1.532v13.737c0 .846.689 1.534 1.535 1.534h7.89c.846 0 1.534-.688 1.534-1.534V56.19c0-.846-.688-1.532-1.535-1.532zm0-26.548h-7.89c-.845 0-1.534.686-1.534 1.532v12.014c0 .846.689 1.533 1.535 1.533h7.89c.846 0 1.534-.687 1.534-1.533V29.642c0-.846-.688-1.532-1.535-1.532z"></path></Age>
+                                            ) : (
+                                                <Age id="maturity-rating-976" viewBox="0 0 100 100">
+                                                    <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
+                                                    </path>
+                                                </Age>
+                                            )}
                                             <p>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</p>
                                             <HD>HD</HD>
                                         </TimeInfo>
@@ -263,7 +270,7 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>출연 :</InfoHead>
-                                            {casts?.map((cast, index) => index === data.genres.length - 1 ? <InfoContent key={index}>{cast.name}..</InfoContent> : <InfoContent key={index}>{cast.name},</InfoContent>)}
+                                            {casts?.map((cast, index) => index === casts.length - 1 ? <InfoContent key={index}>{cast.name}..</InfoContent> : <InfoContent key={index}>{cast.name},</InfoContent>)}
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>평점 :</InfoHead>
@@ -286,21 +293,25 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                 <RelatedInfo>
                                     <Subject>함꼐 시청된 콘텐츠</Subject>
                                     <RelatedContents>
-                                        <Content>
-                                            <Poster>
-                                                <Runtime>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</Runtime>
-                                            </Poster>
-                                            <TimeInfo>
-                                                <p>{data.release_date.split('-')[0]}</p>
-                                                <Age id="maturity-rating-976" viewBox="0 0 100 100">
-                                                    <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
-                                                    </path>
-                                                </Age>
-                                                <p>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</p>
-                                                <HD>HD</HD>
-                                            </TimeInfo>
-                                            <BigOverview>{data.overview}</BigOverview>
-                                        </Content>
+                                        {relateMovies?.map(item => (
+                                            <Content key={item.id}>
+                                                <Poster bg={makeImagePath(item.backdrop_path, 'w500')}>
+                                                    <SmallTitle>{item.title}</SmallTitle>
+                                                </Poster>
+                                                <TimeInfo>
+                                                    {item.vote_count > 1500 ? (
+                                                        <Age id="maturity-rating-978" viewBox="0 0 100 100"><path id="FIll---Red" fill="#C52E37" d="M88.728 100H11.27C5.043 100 0 94.957 0 88.73V11.274C0 5.048 5.043 0 11.27 0h77.458C94.954 0 100 5.048 100 11.274V88.73c0 6.227-5.046 11.27-11.272 11.27"></path><path id="18" fill="#FFFFFE" d="M81.473 15.482c.846 0 1.534.687 1.534 1.533v22.099c0 2.036-.283 3.563-.852 4.581-.568 1.02-1.542 1.947-2.918 2.784l-4.581 2.431 4.58 2.156c.777.417 1.424.834 1.93 1.254.51.42.917.931 1.215 1.528.298.6.507 1.32.626 2.157.12.84.182 1.858.182 3.058v23.533c0 .846-.686 1.533-1.533 1.533H43.21a1.536 1.536 0 01-1.535-1.533V59.063c0-2.218.255-3.896.763-5.036.51-1.135 1.538-2.127 3.1-2.961l4.582-2.156-4.581-2.43c-1.376-.838-2.35-1.778-2.92-2.832-.565-1.046-.855-2.563-.855-4.534V17.015c0-.846.688-1.533 1.534-1.533zm-45.008 0V84.13H21.103V34.62h-5.485l7.104-19.136h13.743zm29.913 39.176h-7.89c-.845 0-1.534.686-1.534 1.532v13.737c0 .846.689 1.534 1.535 1.534h7.89c.846 0 1.534-.688 1.534-1.534V56.19c0-.846-.688-1.532-1.535-1.532zm0-26.548h-7.89c-.845 0-1.534.686-1.534 1.532v12.014c0 .846.689 1.533 1.535 1.533h7.89c.846 0 1.534-.687 1.534-1.533V29.642c0-.846-.688-1.532-1.535-1.532z"></path></Age>
+                                                    ) : (
+                                                        <Age id="maturity-rating-976" viewBox="0 0 100 100">
+                                                            <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
+                                                            </path>
+                                                        </Age>
+                                                    )}
+                                                    <p>{item.release_date.split('-')[0]}</p>
+                                                </TimeInfo>
+                                                <BigOverview>{item.overview}</BigOverview>
+                                            </Content>
+                                        ))}
                                     </RelatedContents>
                                 </RelatedInfo>
                             </InfoWrapper>
