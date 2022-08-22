@@ -5,11 +5,12 @@ const BASE_PATH = "https://api.themoviedb.org/3";
 //api.themoviedb.org/3/movie/616037/credits?api_key=ff60f073259513a99c48e8293fae4fa6&language=ko (영화 직원)
 //api.themoviedb.org/3/movie/616037/similar?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (비슷한 영화들 리스트)
 //api.themoviedb.org/3/genre/movie/list?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (장르 리스트)find id
+//api.themoviedb.org/3/movie/616037?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (디테일) 모든것.
 type GenreId = {
     genre_id: number;
 }
 
-interface IMovie {
+export interface IMovie {
     id: number;
     adult: boolean;
     genre_ids: GenreId[];
@@ -36,3 +37,5 @@ export function getMovies() {
         (response) => response.json()
     )
 }
+
+//장르 , 직원프로필, 등 가져오기 with api , react query
