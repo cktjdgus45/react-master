@@ -145,7 +145,6 @@ const Home = () => {
     const navigate = useNavigate();
     const bigMovieMatch = useMatch("/movies/:movieId");
     const { data, isLoading } = useQuery<IGetMoviesResult>(['movies', 'nowPlaying'], getMovies);
-    console.log(data);
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
 

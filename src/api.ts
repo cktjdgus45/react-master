@@ -6,14 +6,16 @@ const BASE_PATH = "https://api.themoviedb.org/3";
 //api.themoviedb.org/3/movie/616037/similar?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (비슷한 영화들 리스트)
 //api.themoviedb.org/3/genre/movie/list?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (장르 리스트)find id
 //api.themoviedb.org/3/movie/616037?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (디테일) 모든것.
-type GenreId = {
-    genre_id: number;
+
+interface Genre {
+    id: number;
+    name: string;
 }
 
 export interface IMovie {
     id: number;
     adult: boolean;
-    genre_ids: GenreId[];
+    genre_ids: number[];
     backdrop_path: string;
     poster_path: string;
     title: string;
@@ -32,10 +34,26 @@ export interface IGetMoviesResult {
     total_results: number;
 }
 
+export interface IGetMovieDetailResult {
+    id: number;
+    adult: boolean;
+    backdrop_path: string;
+    genres: Genre[];
+    overview: string;
+    release_date: string;
+    runtime: number;
+    title: string;
+    vote_average: number;
+}
+
 export function getMovies() {
     return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
     )
 }
 
-//장르 , 직원프로필, 등 가져오기 with api , react query
+export function getMovieDetail(movieId: number) {
+    return fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko`).then(
+        (response) => response.json()
+    )
+}

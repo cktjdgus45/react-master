@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getMovies, IGetMoviesResult, IMovie } from '../api';
+import { getMovieDetail, IGetMovieDetailResult, IGetMoviesResult, IMovie } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, AnimatePresence, useViewportScroll } from 'framer-motion';
-import { useMatch, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const MovieDetailWrapper = styled(motion.div)``;
 
@@ -220,40 +220,42 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
     const { scrollY } = useViewportScroll();
+    const { data, isLoading } = useQuery<IGetMovieDetailResult>(['movies', 'detail'], () => getMovieDetail(+movieId));
+    console.log(data);
 
     return (
         <MovieDetailWrapper initial={{ opacity: 0, }} animate={{ opacity: 1, }} exit={{ opacity: 0, }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
             <BigMovie layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
                 {
-                    clickedMovie && (
+                    data && (
                         <>
-                            <BigCover style={{ backgroundImage: `linear-gradient(to top,black,transparent),url(${makeImagePath(clickedMovie.backdrop_path)})` }} />
+                            <BigCover style={{ backgroundImage: `linear-gradient(to top,black,transparent),url(${makeImagePath(data.backdrop_path)})` }} />
                             <CloseModal onClick={onCloseModalClick}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-uia="previewModal-closebtn" role="button" aria-label="close">
                                     <path fillRule="evenodd" clipRule="evenodd" d="M2.29297 3.70706L10.5859 12L2.29297 20.2928L3.70718 21.7071L12.0001 13.4142L20.293 21.7071L21.7072 20.2928L13.4143 12L21.7072 3.70706L20.293 2.29285L12.0001 10.5857L3.70718 2.29285L2.29297 3.70706Z" fill="currentColor">
                                     </path>
                                 </svg>
                             </CloseModal>
-                            <BigTitle>{clickedMovie.title}</BigTitle>
+                            <BigTitle>{data.title}</BigTitle>
                             <InfoWrapper>
                                 <MainInfo>
                                     <InfoColumn>
-                                        <BigOverview>{clickedMovie.overview}</BigOverview>
+                                        <BigOverview>{data.overview}</BigOverview>
                                     </InfoColumn>
                                     <InfoColumn>
                                         <TimeInfo>
-                                            <p>2017</p>
+                                            <p>{data.release_date.split('-')[0]}</p>
                                             <Age id="maturity-rating-976" viewBox="0 0 100 100">
                                                 <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
                                                 </path>
                                             </Age>
-                                            <p>1시간 56분</p>
+                                            <p>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</p>
                                             <HD>HD</HD>
                                         </TimeInfo>
                                         <InfoDetail>
                                             <InfoHead>장르 :</InfoHead>
-                                            <InfoContent>밀리터리 영화,미국 영화 , 액션,어드벤쳐</InfoContent>
+                                            {data.genres.map((genre, index) => index === data.genres.length - 1 ? <InfoContent>{genre.name}</InfoContent> : <InfoContent>{genre.name},</InfoContent>)}
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>출연 :</InfoHead>
@@ -261,7 +263,7 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>평점 :</InfoHead>
-                                            <InfoContent>{clickedMovie.vote_average}</InfoContent>
+                                            <InfoContent>{data.vote_average.toFixed(2)}</InfoContent>
                                         </InfoDetail>
                                     </InfoColumn>
                                 </MainInfo>
@@ -280,18 +282,18 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                     <RelatedContents>
                                         <Content>
                                             <Poster>
-                                                <Runtime>1시간 1분</Runtime>
+                                                <Runtime>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</Runtime>
                                             </Poster>
                                             <TimeInfo>
-                                                <p>2017</p>
+                                                <p>{data.release_date.split('-')[0]}</p>
                                                 <Age id="maturity-rating-976" viewBox="0 0 100 100">
                                                     <path id="Fill---Yellow" fill="#DFB039" d="M88.724 100h-77.45C5.049 100 0 94.954 0 88.728V11.274C0 5.048 5.048 0 11.275 0h77.449C94.949 0 100 5.048 100 11.274v77.454C100 94.954 94.95 100 88.724 100"></path><path id="12" fill="#000" d="M36.92 15.484v68.647H21.553V34.62h-5.48l7.097-19.136h13.75zm44.288 0c.848 0 1.535.687 1.535 1.533v18.144c0 1.018-.044 1.885-.133 2.605a8.067 8.067 0 01-.493 1.975 14.48 14.48 0 01-.9 1.843c-.362.631-.84 1.363-1.44 2.204L60.643 70.653h21.923v13.394H41.59v-10.07l26.152-37.29V28.42H57.136v9.345H42.127V17.017c0-.846.687-1.533 1.534-1.533z">
                                                     </path>
                                                 </Age>
-                                                <p>1시간 56분</p>
+                                                <p>{`${Math.floor(data.runtime / 60)}시간${data.runtime % 60}분`}</p>
                                                 <HD>HD</HD>
                                             </TimeInfo>
-                                            <BigOverview>{clickedMovie.overview}</BigOverview>
+                                            <BigOverview>{data.overview}</BigOverview>
                                         </Content>
                                     </RelatedContents>
                                 </RelatedInfo>
