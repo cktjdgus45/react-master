@@ -12,6 +12,13 @@ interface Genre {
     name: string;
 }
 
+interface Cast {
+    name: string;
+    profile_path: string;
+    character: string;
+    id: number;
+}
+
 export interface IMovie {
     id: number;
     adult: boolean;
@@ -46,6 +53,10 @@ export interface IGetMovieDetailResult {
     vote_average: number;
 }
 
+export interface IGetCasts {
+    cast: Cast[];
+}
+
 export function getMovies() {
     return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
@@ -54,6 +65,12 @@ export function getMovies() {
 
 export function getMovieDetail(movieId: number) {
     return fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko`).then(
+        (response) => response.json()
+    )
+}
+
+export function getCasts(movieId: number) {
+    return fetch(`${BASE_PATH}/movie/${movieId}/credits?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
     )
 }

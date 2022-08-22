@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getMovies, IGetMoviesResult, IMovie } from '../api';
+import { getMovies, IGetMoviesResult } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatch, useNavigate } from 'react-router-dom';

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getMovieDetail, IGetMovieDetailResult, IGetMoviesResult, IMovie } from '../api';
+import { getCasts, getMovieDetail, IGetCasts, IGetMovieDetailResult, IMovie } from '../api';
 import { makeImagePath } from '../utils';
-import { motion, AnimatePresence, useViewportScroll } from 'framer-motion';
+import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const MovieDetailWrapper = styled(motion.div)``;
@@ -140,25 +140,28 @@ const Casts = styled.div`
     justify-content:space-around;
     width: 100%;
     height: auto;
-    gap: 3px;
+    column-gap: 5px;
+    row-gap: 7px;
+    flex-wrap: wrap;
 `
 
 const Cast = styled.div`
     display:flex;
     flex-direction: column;
+    width: 150px;
     height: 300px;
     align-items: center;
     justify-content: center;
     background-color:${props => props.theme.black.lighter};
 `
 
-const CastProfile = styled.div`
-    width: 150px;
+const CastProfile = styled.div<{ profile_path: string }>`
+    width: 100%;
     height: 80%;
     border-radius: 2px 2px 0 0;
     border: none;
     margin-bottom: 30px;
-    background-image:url('https://image.tmdb.org/t/p/w200/jpurJ9jAcLCYjgHHfYF32m3zJYm.jpg');
+    background-image:url(${(props) => props.profile_path});
     background-size: cover;
     background-position: center center;
 `
@@ -220,8 +223,9 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
     const { scrollY } = useViewportScroll();
-    const { data, isLoading } = useQuery<IGetMovieDetailResult>(['movies', 'detail'], () => getMovieDetail(+movieId));
-    console.log(data);
+    const { data } = useQuery<IGetMovieDetailResult>(['movies', 'detail'], () => getMovieDetail(+movieId));
+    const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getCasts(+movieId));
+    const casts = castData?.cast.slice(0, 4);
 
     return (
         <MovieDetailWrapper initial={{ opacity: 0, }} animate={{ opacity: 1, }} exit={{ opacity: 0, }}>
@@ -255,11 +259,11 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                         </TimeInfo>
                                         <InfoDetail>
                                             <InfoHead>장르 :</InfoHead>
-                                            {data.genres.map((genre, index) => index === data.genres.length - 1 ? <InfoContent>{genre.name}</InfoContent> : <InfoContent>{genre.name},</InfoContent>)}
+                                            {data.genres.map((genre, index) => index === data.genres.length - 1 ? <InfoContent key={index}>{genre.name}</InfoContent> : <InfoContent key={index}>{genre.name},</InfoContent>)}
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>출연 :</InfoHead>
-                                            <InfoContent>콜 하우저,조시 켈리,대니엘 세브리</InfoContent>
+                                            {casts?.map((cast, index) => index === data.genres.length - 1 ? <InfoContent key={index}>{cast.name}..</InfoContent> : <InfoContent key={index}>{cast.name},</InfoContent>)}
                                         </InfoDetail>
                                         <InfoDetail>
                                             <InfoHead>평점 :</InfoHead>
@@ -270,11 +274,13 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
                                 <CastInfo>
                                     <Subject>주요 등장인물</Subject>
                                     <Casts>
-                                        <Cast>
-                                            <CastProfile></CastProfile>
-                                            <CharacterName>오딘슨 역</CharacterName>
-                                            <CastName>김우빈</CastName>
-                                        </Cast>
+                                        {casts?.map(cast => (
+                                            <Cast key={cast.id}>
+                                                <CastProfile profile_path={makeImagePath(cast.profile_path, 'w200')}></CastProfile>
+                                                <CharacterName>{cast.character}</CharacterName>
+                                                <CastName>{cast.name}</CastName>
+                                            </Cast>
+                                        ))}
                                     </Casts>
                                 </CastInfo>
                                 <RelatedInfo>
