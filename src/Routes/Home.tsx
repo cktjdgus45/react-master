@@ -100,17 +100,57 @@ const Info = styled(motion.div)`
     }
 `;
 
+const Arrow = styled.h3`
+    color: ${props => props.theme.white.lighter};
+    width: 25px;
+    height: 25px;
+    font-size: 26px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+    transform-origin: center;
+    &:hover{
+        transform: scale(1.3,1.3);
+    }
+`
+
+const LArrow = styled(motion.div)`
+    width: 30px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+`;
+const RArrow = styled(motion.div)`
+    width: 30px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+`;
+
 const rowVariants = {
-    hidden: {
-        x: window.outerWidth + 5,
+    hidden: (isNext: boolean) => {
+        return {
+            x: isNext ? window.innerWidth : -window.innerWidth,
+        };
     },
     visible: {
         x: 0,
     },
-    exit: {
-        x: -window.outerWidth - 5,
+    exit: (isNext: boolean) => {
+        return {
+            x: isNext ? -window.innerWidth : window.innerWidth,
+        };
     },
-}
+};
 
 
 const boxVariants = {
@@ -147,7 +187,7 @@ const Home = () => {
     const { data, isLoading } = useQuery<IGetMoviesResult>(['movies', 'nowPlaying'], getMovies);
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
-
+    console.log(leaving);
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
@@ -158,22 +198,33 @@ const Home = () => {
             const totalMovies = data.results.length - 1;
             const maxIndex = Math.floor(totalMovies / offset) - 1;
             setIndex(prev => prev === maxIndex ? 0 : prev + 1);
+            setIsNext(() => true);
+        }
+    }
+    const decreaseIndex = () => {
+        if (data) {
+            if (leaving) return;
+            toggleLeaving();
+            setIndex(prev => prev - 1);
+            setIsNext(() => false);
         }
     }
     const toggleLeaving = () => setLeaving(prev => !prev);
     const clickedMovie = bigMovieMatch?.params.movieId && data?.results.find(movie => String(movie.id) === bigMovieMatch.params.movieId) as any;
+    const [isHovered, setHovered] = useState<Boolean>(false);
+    const [isNext, setIsNext] = useState(true);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
                 <>
-                    <Banner onClick={increaseIndex} bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
+                    <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
                         <Title>{data?.results[0].title}</Title>
                         <Overview>{data?.results[0].overview}</Overview>
                         {data && <DetailButton onClick={() => onDetailClick(data?.results[0].id)}>상세 정보</DetailButton>}
                     </Banner>
                     <Slider>
-                        <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-                            <Row transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
+                        <AnimatePresence custom={isNext} initial={false} onExitComplete={toggleLeaving}>
+                            <Row custom={isNext} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
                                 {data?.results.slice(1).slice(offset * index, offset * index + offset).map(movie =>
                                     <Box
                                         layoutId={movie.id + ""}
@@ -189,6 +240,8 @@ const Home = () => {
                                             <h4>{movie.title}</h4>
                                         </Info>
                                     </Box>)}
+                                {index !== 0 && (<LArrow onClick={decreaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}> <Arrow>◀️</Arrow></LArrow>)}
+                                <RArrow onClick={increaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}>  <Arrow>▶️</Arrow></RArrow>
                             </Row>
                         </AnimatePresence>
                     </Slider>
