@@ -144,7 +144,7 @@ interface ISliderProps {
     subject: subject;
 }
 
-type subject = 'now_playing' | 'popular' | 'top_rated' | 'upcoming';
+export type subject = 'now_playing' | 'popular' | 'top_rated' | 'upcoming';
 
 const Slider = ({ subject }: ISliderProps) => {
     const navigate = useNavigate();
@@ -152,7 +152,7 @@ const Slider = ({ subject }: ISliderProps) => {
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
     const onDetailClick = (movieId: number) => {
-        navigate(`/movies/${movieId}`);
+        navigate(`/movies/${movieId}/${subject}`);
     }
     const increaseIndex = () => {
         if (data) {

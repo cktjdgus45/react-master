@@ -1,6 +1,6 @@
 
 import styled from 'styled-components';
-import Slider from '../Components/Slider';
+import Slider, { subject } from '../Components/Slider';
 import { useQuery } from 'react-query';
 import { getMovies, IGetMovies, } from '../api';
 import { makeImagePath } from '../utils';
@@ -70,7 +70,8 @@ const Devider = styled.div`
 
 const Home = () => {
     const navigate = useNavigate();
-    const bigMovieMatch = useMatch("/movies/:movieId");
+    const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
+    const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
     const { data, isLoading } = useQuery<IGetMovies>(['movies', 'top_rated'], () => getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
@@ -96,8 +97,12 @@ const Home = () => {
                         <Slider subject='top_rated'></Slider>
                         <Slider subject='upcoming'></Slider>
                         <AnimatePresence>
-                            {bigMovieMatch?.params.movieId ?
-                                <MovieDetail movieId={bigMovieMatch.params.movieId}></MovieDetail>
+                            {bigMovieMatch?.params.movieId && bigMovieMatch.params.subject ?
+                                <MovieDetail subject={bigMovieMatch.params.subject} movieId={bigMovieMatch.params.movieId}></MovieDetail>
+                                : null
+                            }
+                            {middleMovieMatch?.params.movieId ?
+                                <MovieDetail movieId={middleMovieMatch.params.movieId}></MovieDetail>
                                 : null
                             }
                         </AnimatePresence>

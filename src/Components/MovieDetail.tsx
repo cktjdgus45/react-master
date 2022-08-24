@@ -221,7 +221,7 @@ const SmallTitle = styled.h3`
 
 interface IMovieDetailProps {
     movieId: string;
-    subject: string;
+    subject?: string;
 }
 
 const MovieDetail = ({ movieId, subject }: IMovieDetailProps) => {
