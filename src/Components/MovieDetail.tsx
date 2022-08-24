@@ -214,11 +214,10 @@ const SmallTitle = styled.h3`
 `
 
 interface IMovieDetailProps {
-    clickedMovie: IMovie;
     movieId: string;
 }
 
-const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
+const MovieDetail = ({ movieId }: IMovieDetailProps) => {
     const navigate = useNavigate();
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
@@ -234,7 +233,6 @@ const MovieDetail = ({ clickedMovie, movieId }: IMovieDetailProps) => {
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
         return words;
     }
-    console.log(relatedMovies);
 
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

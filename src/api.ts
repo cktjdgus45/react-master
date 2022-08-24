@@ -39,7 +39,7 @@ export interface IMovie {
     vote_average: number;
 }
 
-export interface IGetMoviesResult {
+export interface IGetMovies {
     dates: {
         maximum: string;
         minimum: string;
@@ -70,11 +70,12 @@ export interface IGetRelatedMovie {
     results: RelatedMovie[];
 }
 
-export function getMovies() {
-    return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko`).then(
+export function getMovies(subject:string) {
+    return fetch(`${BASE_PATH}/movie/${subject}?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
     )
 }
+
 
 export function getMovieDetail(movieId: number) {
     return fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko`).then(
@@ -93,3 +94,4 @@ export function getRelatedMovie(movieId: number) {
         response => response.json()
     )
 }
+
