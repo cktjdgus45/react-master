@@ -51,6 +51,20 @@ const DetailButton = styled.button`
     }
 `
 
+const BannerSlider = styled.div`
+    position: absolute;
+    bottom: -300px;
+    width: 100%;
+    height: auto;
+    display: block;
+`;
+
+const Devider = styled.div`
+    width: 100%;
+    height: 300px;
+    display: block;
+`
+
 const Home = () => {
     const navigate = useNavigate();
     const { data, isLoading } = useQuery<IGetMovies>(['movies', 'top_rated'], () => getMovies('top_rated'));
@@ -67,7 +81,10 @@ const Home = () => {
                             <Overview>{data?.results[0].overview}</Overview>
                             {data && <DetailButton onClick={() => onDetailClick(data?.results[0].id)}>상세 정보</DetailButton>}
                         </Banner>
-                        <Slider subject='now_playing'></Slider>
+                        <BannerSlider>
+                            <Slider subject='now_playing'></Slider>
+                        </BannerSlider>
+                        <Devider></Devider>
                         <Slider subject='popular'></Slider>
                         <Slider subject='top_rated'></Slider>
                         <Slider subject='upcoming'></Slider>

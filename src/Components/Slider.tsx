@@ -7,29 +7,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useMatch, useNavigate } from 'react-router-dom';
 import MovieDetail from '../Components/MovieDetail';
 
-
 const SliderWrapper = styled.div`
-    position: relative;
-    top: -100px;
-`;
-
-const SliderCopy = styled.div`
-    margin-top: 200px;
+    margin-bottom:400px;
+    &:first-child{
+        color: red;
+    }
 `
 
 const Row = styled(motion.div)`
     position: absolute;
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(6,1fr);
+    grid-template-columns: repeat(7,1fr);
     margin-bottom:5px;
-    width: 100%;
-`;
-const RowCopy = styled(motion.div)`
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(6,1fr);
-    width: 100%;
+    width: 107.5%;
 `;
 
 const Box = styled(motion.div) <{ bgphoto: string }>`
@@ -42,9 +33,12 @@ const Box = styled(motion.div) <{ bgphoto: string }>`
     &:first-child{
         transform-origin: center left;
     }
-    &:last-child{
+    &:nth-child(7n-1){
         transform-origin: center right;
     }
+    /* &:last-child{
+        transform-origin: center right;
+    } */
 `;
 
 const Info = styled(motion.div)`
@@ -75,13 +69,14 @@ const Arrow = styled.h3`
 
 const BigTitle = styled.h1`
     font-size: 32px;
+    padding-left: 5px;
     font-weight: 600;
     color:${props => props.theme.white.lighter};
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 `
 
 const LArrow = styled(motion.div)`
-    width: 30px;
+    width: 90px;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     display: flex;
@@ -91,8 +86,8 @@ const LArrow = styled(motion.div)`
     top: 0;
     left: 0;
 `;
-const RArrow = styled(motion.div)`
-    width: 30px;
+const RArrow = styled(motion.div) <{ innerWidth: number }>`
+    width: 90px;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     display: flex;
@@ -100,13 +95,13 @@ const RArrow = styled(motion.div)`
     align-items: center;
     position: absolute;
     top: 0;
-    right: 0;
+    left:${props => props.innerWidth - 150}px;
 `;
 
 const rowVariants = {
     hidden: (isNext: boolean) => {
         return {
-            x: isNext ? window.innerWidth : -window.innerWidth,
+            x: isNext ? window.innerWidth + 160 : -window.innerWidth - 160,
         };
     },
     visible: {
@@ -114,7 +109,7 @@ const rowVariants = {
     },
     exit: (isNext: boolean) => {
         return {
-            x: isNext ? -window.innerWidth : window.innerWidth,
+            x: isNext ? -window.innerWidth - 160 : window.innerWidth + 160,
         };
     },
 };
@@ -147,7 +142,7 @@ const infoVariants = {
     }
 }
 
-const offset = 6;
+const offset = 7;
 
 interface ISliderProps {
     subject: subject;
@@ -171,7 +166,6 @@ const Slider = ({ subject }: ISliderProps) => {
             const totalMovies = data.results.length;
             const maxIndex = Math.floor(totalMovies / offset) - 1;
             setIndex(prev => prev === maxIndex ? 0 : prev + 1);
-            console.log(index);
             setIsNext(() => true);
         }
     }
@@ -188,7 +182,7 @@ const Slider = ({ subject }: ISliderProps) => {
     const [isNext, setIsNext] = useState(true);
     return (
         <>
-            <SliderCopy>
+            <SliderWrapper>
                 <BigTitle>{subject}</BigTitle>
                 <AnimatePresence custom={isNext} initial={false} onExitComplete={toggleLeaving}>
                     <Row custom={isNext} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
@@ -208,10 +202,10 @@ const Slider = ({ subject }: ISliderProps) => {
                                 </Info>
                             </Box>)}
                         {index !== 0 && (<LArrow onClick={decreaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}> <Arrow>◀️</Arrow></LArrow>)}
-                        <RArrow onClick={increaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}>  <Arrow>▶️</Arrow></RArrow>
+                        <RArrow innerWidth={window.innerWidth} onClick={increaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}>  <Arrow>▶️</Arrow></RArrow>
                     </Row>
                 </AnimatePresence>
-            </SliderCopy>
+            </SliderWrapper>
             <AnimatePresence>
                 {bigMovieMatch?.params.movieId ?
                     <MovieDetail movieId={bigMovieMatch.params.movieId}></MovieDetail>
