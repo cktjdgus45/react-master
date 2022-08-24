@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetMovieDetailResult, IGetRelatedMovie, IMovie } from '../api';
+import { getCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetMovieDetailResult, IGetRelatedMovie } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -219,6 +219,7 @@ interface IMovieDetailProps {
 }
 
 const MovieDetail = ({ movieId }: IMovieDetailProps) => {
+    const [isActive, setIsActive] = useState(false);
     const navigate = useNavigate();
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
@@ -228,7 +229,6 @@ const MovieDetail = ({ movieId }: IMovieDetailProps) => {
     const { data: relatedMovies } = useQuery<IGetRelatedMovie>(['movies', 'related'], () => getRelatedMovie(+movieId));
     const casts = castData?.cast.slice(0, 4);
     const relateMovies = relatedMovies?.results.slice(0, 12);
-
     const sliceOverView = (overview: string) => {
         let words = overview.substring(0, overview.lastIndexOf(' ') / 4);
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
@@ -237,10 +237,14 @@ const MovieDetail = ({ movieId }: IMovieDetailProps) => {
     const onDetailScroll = () => {
         console.log('scroll');
     }
+
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+    });
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
-            <BigMovie onScroll={onDetailScroll} layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
+            <Overlay onScroll={onDetailScroll} onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
+            <BigMovie layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
                 {
                     data && (
                         <>

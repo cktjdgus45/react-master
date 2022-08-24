@@ -7,6 +7,7 @@ import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import MovieDetail from '../Components/MovieDetail';
+import { useEffect } from 'react';
 
 
 const Wrapper = styled.div`
@@ -74,6 +75,9 @@ const Home = () => {
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
+    useEffect(() => {
+        document.body.style.overflow = "scroll";
+    });
     return (
         <Wrapper>
             {
