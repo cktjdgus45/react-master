@@ -4,7 +4,9 @@ import Slider from '../Components/Slider';
 import { useQuery } from 'react-query';
 import { getMovies, IGetMovies, } from '../api';
 import { makeImagePath } from '../utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import MovieDetail from '../Components/MovieDetail';
 
 
 const Wrapper = styled.div`
@@ -53,7 +55,7 @@ const DetailButton = styled.button`
 
 const BannerSlider = styled.div`
     position: absolute;
-    bottom: -300px;
+    bottom: -200px;
     width: 100%;
     height: auto;
     display: block;
@@ -67,6 +69,7 @@ const Devider = styled.div`
 
 const Home = () => {
     const navigate = useNavigate();
+    const bigMovieMatch = useMatch("/movies/:movieId");
     const { data, isLoading } = useQuery<IGetMovies>(['movies', 'top_rated'], () => getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
@@ -88,6 +91,12 @@ const Home = () => {
                         <Slider subject='popular'></Slider>
                         <Slider subject='top_rated'></Slider>
                         <Slider subject='upcoming'></Slider>
+                        <AnimatePresence>
+                            {bigMovieMatch?.params.movieId ?
+                                <MovieDetail movieId={bigMovieMatch.params.movieId}></MovieDetail>
+                                : null
+                            }
+                        </AnimatePresence>
                     </>
                 )
             }

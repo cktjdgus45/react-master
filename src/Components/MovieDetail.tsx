@@ -19,8 +19,9 @@ const Overlay = styled(motion.div)`
 
 const BigMovie = styled(motion.div)`
     position: absolute;
-    height: auto;
     width: 45vw;
+    overflow-y: scroll;
+    height: 100vh;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -233,11 +234,13 @@ const MovieDetail = ({ movieId }: IMovieDetailProps) => {
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
         return words;
     }
-
+    const onDetailScroll = () => {
+        console.log('scroll');
+    }
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
-            <BigMovie layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
+            <BigMovie onScroll={onDetailScroll} layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
                 {
                     data && (
                         <>

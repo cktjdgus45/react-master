@@ -4,14 +4,10 @@ import styled from 'styled-components';
 import { getMovies, IGetMovies, } from '../api';
 import { makeImagePath } from '../utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useMatch, useNavigate } from 'react-router-dom';
-import MovieDetail from '../Components/MovieDetail';
+import { useNavigate } from 'react-router-dom';
 
 const SliderWrapper = styled.div`
-    margin-bottom:400px;
-    &:first-child{
-        color: red;
-    }
+    margin-bottom:300px;
 `
 
 const Row = styled(motion.div)`
@@ -86,7 +82,7 @@ const LArrow = styled(motion.div)`
     top: 0;
     left: 0;
 `;
-const RArrow = styled(motion.div) <{ innerWidth: number }>`
+const RArrow = styled(motion.div) <{ innerwidth: number }>`
     width: 90px;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
@@ -95,7 +91,7 @@ const RArrow = styled(motion.div) <{ innerWidth: number }>`
     align-items: center;
     position: absolute;
     top: 0;
-    left:${props => props.innerWidth - 150}px;
+    left:${props => props.innerwidth - 150}px;
 `;
 
 const rowVariants = {
@@ -152,7 +148,6 @@ type subject = 'now_playing' | 'popular' | 'top_rated' | 'upcoming';
 
 const Slider = ({ subject }: ISliderProps) => {
     const navigate = useNavigate();
-    const bigMovieMatch = useMatch("/movies/:movieId");
     const { data } = useQuery<IGetMovies>(['movies', `${subject}`], () => getMovies(subject));
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
@@ -202,16 +197,11 @@ const Slider = ({ subject }: ISliderProps) => {
                                 </Info>
                             </Box>)}
                         {index !== 0 && (<LArrow onClick={decreaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}> <Arrow>◀️</Arrow></LArrow>)}
-                        <RArrow innerWidth={window.innerWidth} onClick={increaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}>  <Arrow>▶️</Arrow></RArrow>
+                        <RArrow innerwidth={window.innerWidth} onClick={increaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}>  <Arrow>▶️</Arrow></RArrow>
                     </Row>
                 </AnimatePresence>
             </SliderWrapper>
-            <AnimatePresence>
-                {bigMovieMatch?.params.movieId ?
-                    <MovieDetail movieId={bigMovieMatch.params.movieId}></MovieDetail>
-                    : null
-                }
-            </AnimatePresence>
+
         </>
     )
 }
