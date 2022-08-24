@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { getCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetMovieDetailResult, IGetRelatedMovie } from '../api';
@@ -15,6 +15,7 @@ const Overlay = styled(motion.div)`
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     opacity: 0;
+    overflow-y: auto;
 `;
 
 const BigMovie = styled(motion.div)`
@@ -27,6 +28,10 @@ const BigMovie = styled(motion.div)`
     margin: 0 auto;
     background-color: ${props => props.theme.black.darker};
     border-radius: 1%;
+    &::-webkit-scrollbar {
+    display: none;
+}
+  -ms-overflow-style: none; 
 `;
 
 const CloseModal = styled.div`
@@ -216,10 +221,10 @@ const SmallTitle = styled.h3`
 
 interface IMovieDetailProps {
     movieId: string;
+    subject: string;
 }
 
-const MovieDetail = ({ movieId }: IMovieDetailProps) => {
-    const [isActive, setIsActive] = useState(false);
+const MovieDetail = ({ movieId, subject }: IMovieDetailProps) => {
     const navigate = useNavigate();
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
@@ -234,17 +239,15 @@ const MovieDetail = ({ movieId }: IMovieDetailProps) => {
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
         return words;
     }
-    const onDetailScroll = () => {
-        console.log('scroll');
-    }
+
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
     });
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Overlay onScroll={onDetailScroll} onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
-            <BigMovie layoutId={movieId} style={{ top: scrollY.get() + 40 }}>
+            <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
+            <BigMovie layoutId={movieId + `${subject}`} style={{ top: scrollY.get() + 40 }}>
                 {
                     data && (
                         <>
