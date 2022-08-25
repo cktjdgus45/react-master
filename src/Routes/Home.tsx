@@ -1,6 +1,6 @@
 
 import styled from 'styled-components';
-import Slider, { subject } from '../Components/Slider';
+import Slider from '../Components/Slider';
 import { useQuery } from 'react-query';
 import { getMovies, IGetMovies, } from '../api';
 import { makeImagePath } from '../utils';
@@ -68,6 +68,32 @@ const Devider = styled.div`
     display: block;
 `
 
+const LoadingSpeaner = styled.div`
+    width: 48px;
+    height: 48px;
+    border: 5px solid ${props => props.theme.black.lighter};
+    border-bottom-color: #E50914;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotate 1s linear infinite;
+    position: absolute;
+    right: 0;
+    left: 0; 
+    top: 300px;
+    margin: 0 auto; 
+    @keyframes rotate {
+        0%{
+             transform: rotate(0deg);
+        }50%{
+            transform: rotate(180deg);
+        }100%{
+            transform: rotate(360deg);
+        }
+    }
+    `
+
+
 const Home = () => {
     const navigate = useNavigate();
     const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
@@ -82,7 +108,7 @@ const Home = () => {
     return (
         <Wrapper>
             {
-                isLoading ? 'loading' : (
+                isLoading ? <LoadingSpeaner /> : (
                     <>
                         <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
                             <Title>{data?.results[0].title}</Title>

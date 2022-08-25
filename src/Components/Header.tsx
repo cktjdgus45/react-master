@@ -20,6 +20,7 @@ const Nav = styled(motion.nav)`
     font-size: 14px;
     line-height: 20px;
     padding: 0 4%;
+    z-index: 99999;
 `;
 const Col = styled.div`
     display: flex;
