@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getMovies, IGetMovies, } from '../api';
-import { makeImagePath } from '../utils';
+import { getMovies, IGetContent } from '../../api';
+import { makeImagePath } from '../../utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../Components/Loading';
+import Loading from '../Loading/Loading';
 
 const SliderWrapper = styled.div`
     margin-bottom:300px;
@@ -145,11 +145,11 @@ interface ISliderProps {
     subject: subject;
 }
 
-export type subject = 'now_playing' | 'popular' | 'top_rated' | 'upcoming';
+export type subject = 'now_playing' | 'popular' | 'top_rated' | 'upcoming' | 'airing_today' | 'on_the_air';
 
-const Slider = ({ subject }: ISliderProps) => {
+const MovieSlider = ({ subject }: ISliderProps) => {
     const navigate = useNavigate();
-    const { data, isLoading } = useQuery<IGetMovies>(['movies', `${subject}`], () => getMovies(subject));
+    const { data, isLoading } = useQuery<IGetContent>(['movies', `${subject}`], () => getMovies(subject));
     const [index, setIndex] = useState(0);
     const [leaving, setLeaving] = useState(false);
     const onDetailClick = (movieId: number) => {
@@ -185,8 +185,10 @@ const Slider = ({ subject }: ISliderProps) => {
                             switch (subject) {
                                 case "now_playing": return '새로 올라온 컨텐츠';
                                 case "popular": return '넷플릭스 인기 컨텐츠';
-                                case "top_rated": return '오늘 대한민국의 TOP 10 영화';
+                                case "top_rated": return '오늘 대한민국의 TOP 10 컨텐츠';
                                 case "upcoming": return '이번주 공개 컨텐츠';
+                                case "airing_today": return '오늘 공개 컨텐츠';
+                                case "on_the_air": return '방영중인 컨텐츠';
                                 default: return '컨텐츠';
                             }
                         })()
@@ -221,4 +223,4 @@ const Slider = ({ subject }: ISliderProps) => {
     )
 }
 
-export default Slider;
+export default MovieSlider;

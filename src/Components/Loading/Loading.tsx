@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useTime, useTransform } from 'framer-motion';
 
 const SliderWrapper = styled(motion.div)`
     
@@ -16,14 +16,15 @@ const Row = styled(motion.div)`
 const Box = styled(motion.div)`
     background-color:rgb(44,44,44);
     height: 200px;
-    opacity: 0;
 `;
 
 
+
+
+
 const Loading = () => {
-    const getOpacity = (index: number) => {
-        return 1 / index;
-    }
+    const time = useTime();
+    const opacity = useTransform(time, [0, 6000], [0, 1], { clamp: false });
     return (
         <>
             <SliderWrapper >
@@ -34,7 +35,7 @@ const Loading = () => {
                                 custom={index}
                                 key={index}
                                 transition={{ duration: 4 }}
-                                style={{ opacity: getOpacity(index) }}
+                                style={{ opacity }}
                             >
                             </Box>)}
                     </Row>

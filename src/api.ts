@@ -1,15 +1,20 @@
 const API_KEY = "36eac08768828f2c4e7cd1f7365d208d";
 const BASE_PATH = "https://api.themoviedb.org/3";
-//api.themoviedb.org/3/movie/now_playing?api_key=36eac08768828f2c4e7cd1f7365d208d&language=en-US&page=1
-//api.themoviedb.org/3/search/movie?api_key=36eac08768828f2c4e7cd1f7365d208d&query=dune
-//api.themoviedb.org/3/movie/616037/credits?api_key=ff60f073259513a99c48e8293fae4fa6&language=ko (영화 직원) cast
-//api.themoviedb.org/3/genre/movie/list?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (장르 리스트)find id
-//api.themoviedb.org/3/movie/616037?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (디테일) 모든것.
-//api.themoviedb.org/3/movie/616037/similar?api_key=36eac08768828f2c4e7cd1f7365d208d&language=ko (비슷한 영화들 리스트)
 
 interface Genre {
     id: number;
     name: string;
+}
+
+export interface ITV {
+    first_air_date: string;
+    genres: Genre[];
+    episode_run_time: [];
+    name: string;
+    overview: string;
+    backdrop_path: string;
+    vote_average: number;
+    vote_count: number;
 }
 
 interface Cast {
@@ -19,38 +24,41 @@ interface Cast {
     id: number;
 }
 
-interface RelatedMovie {
+interface Relate {
     id: number;
     vote_count: number;
     backdrop_path: string;
     title: string;
     overview: string;
     release_date: string;
+    first_air_date: string;
 }
 
-export interface IMovie {
+export interface IContent {
     id: number;
     vote_count: number;
     genre_ids: number[];
     backdrop_path: string;
     poster_path: string;
     title: string;
+    name: string;
     overview: string;
     vote_average: number;
 }
 
-export interface IGetMovies {
+
+export interface IGetContent {
     dates: {
         maximum: string;
         minimum: string;
     },
     page: number;
-    results: IMovie[];
+    results: IContent[];
     total_pages: number;
     total_results: number;
 }
 
-export interface IGetMovieDetailResult {
+export interface IGetDetailResult {
     id: number;
     vote_count: number;
     backdrop_path: string;
@@ -66,11 +74,11 @@ export interface IGetCasts {
     cast: Cast[];
 }
 
-export interface IGetRelatedMovie {
-    results: RelatedMovie[];
+export interface IGetRelate {
+    results: Relate[];
 }
 
-export function getMovies(subject:string) {
+export function getMovies(subject: string) {
     return fetch(`${BASE_PATH}/movie/${subject}?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
     )
@@ -83,8 +91,8 @@ export function getMovieDetail(movieId: number) {
     )
 }
 
-export function getCasts(movieId: number) {
-    return fetch(`${BASE_PATH}/movie/${movieId}/credits?api_key=${API_KEY}&language=ko`).then(
+export function getMovieCasts(id: number) {
+    return fetch(`${BASE_PATH}/movie/${id}/credits?api_key=${API_KEY}&language=ko`).then(
         (response) => response.json()
     )
 }
@@ -92,6 +100,29 @@ export function getCasts(movieId: number) {
 export function getRelatedMovie(movieId: number) {
     return fetch(`${BASE_PATH}/movie/${movieId}/similar?api_key=${API_KEY}&language=ko`).then(
         response => response.json()
+    )
+}
+export function getTvCasts(id: number) {
+    return fetch(`${BASE_PATH}/tv/${id}/credits?api_key=${API_KEY}&language=ko`).then(
+        (response) => response.json()
+    )
+}
+
+export function getRelatedTv(tvId: number) {
+    return fetch(`${BASE_PATH}/tv/${tvId}/similar?api_key=${API_KEY}&language=ko`).then(
+        response => response.json()
+    )
+}
+
+export function getTvDetail(tv_id: number) {
+    return fetch(`${BASE_PATH}/tv/${tv_id}?api_key=${API_KEY}&language=ko`).then(
+        (response) => response.json()
+    )
+}
+
+export function getTvshows(subject: string) {
+    return fetch(`${BASE_PATH}/tv/${subject}?api_key=${API_KEY}&language=ko`).then(
+        (response) => response.json()
     )
 }
 

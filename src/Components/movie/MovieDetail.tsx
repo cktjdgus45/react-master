@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetMovieDetailResult, IGetRelatedMovie } from '../api';
-import { makeImagePath } from '../utils';
+import { getMovieCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetDetailResult, IGetRelate } from '../../api';
+import { makeImagePath } from '../../utils';
 import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -219,19 +219,19 @@ const SmallTitle = styled.h3`
     color: ${props => props.theme.white.lighter};
 `
 
-interface IMovieDetailProps {
-    movieId: string;
+interface IDetailProps {
+    id: string;
     subject?: string;
 }
 
-const MovieDetail = ({ movieId, subject }: IMovieDetailProps) => {
+const MovieDetail = ({ id, subject }: IDetailProps) => {
     const navigate = useNavigate();
     const onOverlayClick = () => navigate('/');
     const onCloseModalClick = () => navigate('/');
     const { scrollY } = useViewportScroll();
-    const { data } = useQuery<IGetMovieDetailResult>(['movies', 'detail'], () => getMovieDetail(+movieId));
-    const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getCasts(+movieId));
-    const { data: relatedMovies } = useQuery<IGetRelatedMovie>(['movies', 'related'], () => getRelatedMovie(+movieId));
+    const { data } = useQuery<IGetDetailResult>(['movies', 'detail'], () => getMovieDetail(+id));
+    const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getMovieCasts(+id));
+    const { data: relatedMovies } = useQuery<IGetRelate>(['movies', 'related'], () => getRelatedMovie(+id));
     const casts = castData?.cast.slice(0, 4);
     const relateMovies = relatedMovies?.results.slice(0, 12);
     const sliceOverView = (overview: string) => {
@@ -247,7 +247,7 @@ const MovieDetail = ({ movieId, subject }: IMovieDetailProps) => {
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
-            <BigMovie layoutId={movieId + `${subject}`} style={{ top: scrollY.get() + 40 }}>
+            <BigMovie layoutId={id + `${subject}`} style={{ top: scrollY.get() + 80 }}>
                 {
                     data && (
                         <>

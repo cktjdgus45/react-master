@@ -91,7 +91,7 @@ const Input = styled(motion.input)`
 
 const Header = () => {
     const navigate = useNavigate();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<IForm>();
+    const { register, handleSubmit } = useForm<IForm>();
     const onSubmit = (data: IForm) => {
         navigate(`/search?keyword=${data.keyword}`);
     };

@@ -1,13 +1,14 @@
 
 import styled from 'styled-components';
-import Slider from '../Components/Slider';
 import { useQuery } from 'react-query';
-import { getMovies, IGetMovies, } from '../api';
+import { getMovies, IGetContent, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import MovieDetail from '../Components/MovieDetail';
 import { useEffect } from 'react';
+import LoadingSpinner from '../Components/Loading/LoadingSpinner';
+import MovieDetail from '../Components/movie/MovieDetail';
+import MovieSlider from '../Components/movie/MovieSlider';
 
 
 const Wrapper = styled.div`
@@ -68,37 +69,14 @@ const Devider = styled.div`
     display: block;
 `
 
-const LoadingSpeaner = styled.div`
-    width: 48px;
-    height: 48px;
-    border: 5px solid ${props => props.theme.black.lighter};
-    border-bottom-color: #E50914;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotate 1s linear infinite;
-    position: absolute;
-    right: 0;
-    left: 0; 
-    top: 300px;
-    margin: 0 auto; 
-    @keyframes rotate {
-        0%{
-             transform: rotate(0deg);
-        }50%{
-            transform: rotate(180deg);
-        }100%{
-            transform: rotate(360deg);
-        }
-    }
-    `
+
 
 
 const Home = () => {
     const navigate = useNavigate();
     const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
     const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
-    const { data, isLoading } = useQuery<IGetMovies>(['movies', 'top_rated'], () => getMovies('top_rated'));
+    const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], () => getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
@@ -108,7 +86,7 @@ const Home = () => {
     return (
         <Wrapper>
             {
-                isLoading ? <LoadingSpeaner /> : (
+                isLoading ? <LoadingSpinner /> : (
                     <>
                         <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
                             <Title>{data?.results[0].title}</Title>
@@ -116,19 +94,19 @@ const Home = () => {
                             {data && <DetailButton onClick={() => onDetailClick(data?.results[0].id)}>상세 정보</DetailButton>}
                         </Banner>
                         <BannerSlider>
-                            <Slider subject='now_playing'></Slider>
+                            <MovieSlider subject='now_playing'></MovieSlider>
                         </BannerSlider>
                         <Devider></Devider>
-                        <Slider subject='popular'></Slider>
-                        <Slider subject='top_rated'></Slider>
-                        <Slider subject='upcoming'></Slider>
+                        <MovieSlider subject='popular'></MovieSlider>
+                        <MovieSlider subject='top_rated'></MovieSlider>
+                        <MovieSlider subject='upcoming'></MovieSlider>
                         <AnimatePresence>
                             {bigMovieMatch?.params.movieId && bigMovieMatch.params.subject ?
-                                <MovieDetail subject={bigMovieMatch.params.subject} movieId={bigMovieMatch.params.movieId}></MovieDetail>
+                                <MovieDetail subject={bigMovieMatch.params.subject} id={bigMovieMatch.params.movieId}></MovieDetail>
                                 : null
                             }
                             {middleMovieMatch?.params.movieId ?
-                                <MovieDetail movieId={middleMovieMatch.params.movieId}></MovieDetail>
+                                <MovieDetail id={middleMovieMatch.params.movieId}></MovieDetail>
                                 : null
                             }
                         </AnimatePresence>
