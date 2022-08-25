@@ -178,7 +178,19 @@ const Slider = ({ subject }: ISliderProps) => {
     return (
         <>
             <SliderWrapper>
-                <BigTitle>{subject}</BigTitle>
+                <BigTitle>
+                    {
+                        (() => {
+                            switch (subject) {
+                                case "now_playing": return '새로 올라온 컨텐츠';
+                                case "popular": return '넷플릭스 인기 컨텐츠';
+                                case "top_rated": return '오늘 대한민국의 TOP 10 영화';
+                                case "upcoming": return '이번주 공개 컨텐츠';
+                                default: return '컨텐츠';
+                            }
+                        })()
+                    }
+                </BigTitle>
                 <AnimatePresence custom={isNext} initial={false} onExitComplete={toggleLeaving}>
                     <Row custom={isNext} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
                         {data?.results.slice(offset * index, offset * index + offset).map(movie =>
