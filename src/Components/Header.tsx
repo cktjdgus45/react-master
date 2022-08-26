@@ -141,7 +141,7 @@ const Header = () => {
                 <Search onSubmit={handleSubmit(onSubmit)}>
                     <motion.svg
                         onClick={toggleSearch}
-                        animate={{ x: searchOpen ? -180 : 0 }}
+                        animate={{ x: searchOpen ? -210 : 0 }}
                         transition={{ type: 'linear' }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
