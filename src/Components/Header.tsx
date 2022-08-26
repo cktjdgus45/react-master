@@ -93,7 +93,7 @@ const Header = () => {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IForm>();
     const onSubmit = (data: IForm) => {
-        navigate(`/search?keyword=${data.keyword}`);
+        navigate(`/search/${data.keyword}`);
     };
     const { scrollY } = useScroll();
     const navAnimation = useAnimationControls();
@@ -114,7 +114,6 @@ const Header = () => {
             }
         })
     }, [scrollY, navAnimation]);
-    // background-image: linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent);
     return (
         <Nav animate={navAnimation} initial={{ backgroundImage: "linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent)" }}>
             <Col>

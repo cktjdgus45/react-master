@@ -59,6 +59,7 @@ export interface IGetContent {
     total_results: number;
 }
 
+
 export interface IGetDetailResult {
     id: number;
     vote_count: number;
