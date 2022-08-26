@@ -78,8 +78,6 @@ body {
   font-weight: 300;
   line-height: 1.2;
   font-family: 'Spoqa Han Sans Neo', 'sans-serif';
-  /* 잠시 scroll test를 위해 200vh 세팅 */
-  height: 200vh;
   color:${props => props.theme.white.darker};
   background-color: black;
   overflow-x: hidden;

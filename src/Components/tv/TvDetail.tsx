@@ -245,6 +245,7 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
     useEffect(() => {
         document.body.style.overflow = "hidden";
     });
+
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>

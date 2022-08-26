@@ -243,7 +243,6 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
         return words;
     }
 
-
     useEffect(() => {
         document.body.style.overflow = "hidden";
     });

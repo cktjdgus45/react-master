@@ -127,3 +127,14 @@ export function getTvshows(subject: string) {
     )
 }
 
+export function getSearchTvshows(keyword: string) {
+    return fetch(`${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${keyword}`).then(
+        (response) => response.json()
+    );
+}
+export function getSearchMovies(keyword: string) {
+    return fetch(`${BASE_PATH}/search/movie?api_key=${API_KEY}&language=ko&query=${keyword}`).then(
+        (response) => response.json()
+    );
+}
+
