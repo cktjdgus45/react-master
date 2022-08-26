@@ -209,7 +209,7 @@ const TvSlider = ({ subject }: ISliderProps) => {
                                     onClick={() => onDetailClick(tv.id)}
                                 >
                                     <Info variants={infoVariants}>
-                                        <h4>{tv.title}</h4>
+                                        <h4>{tv.name}</h4>
                                     </Info>
                                 </Box>)}
                             {index !== 0 && (<LArrow onClick={decreaseIndex} initial={{ opacity: 0 }} transition={{ type: 'tween' }} animate={{ opacity: isHovered ? 1 : 0 }} exit={{ opacity: 0 }}> <Arrow>◀️</Arrow></LArrow>)}

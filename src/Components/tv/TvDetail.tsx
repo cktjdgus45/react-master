@@ -191,7 +191,9 @@ const RelatedInfo = styled.div`
 
 const RelatedContents = styled.div`
     display: grid;
-    grid-template-columns: repeat(3,auto);
+    justify-content: center;
+    grid-template-columns: repeat(3,30%);
+    padding-bottom: 200px;
     gap: 15px;
     background-color: ${props => props.theme.black.lighter};
     
@@ -235,11 +237,11 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
     const casts = castData?.cast.slice(0, 4);
     const relatedTvshows = relatedTVs?.results.slice(0, 12);
     const sliceOverView = (overview: string) => {
+        if (overview.length < 127) return overview;
         let words = overview.substring(0, overview.lastIndexOf(' ') / 4);
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
         return words;
     }
-
     useEffect(() => {
         document.body.style.overflow = "hidden";
     });
@@ -311,7 +313,7 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
                                         {relatedTvshows?.map(item => (
                                             <Content key={item.id}>
                                                 <Poster bg={makeImagePath(item.backdrop_path, 'w500')}>
-                                                    <SmallTitle>{item.title}</SmallTitle>
+                                                    <SmallTitle>{item.name}</SmallTitle>
                                                 </Poster>
                                                 <TimeInfo>
                                                     {item.vote_count > 1500 ? (
@@ -322,9 +324,9 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
                                                             </path>
                                                         </Age>
                                                     )}
-                                                    {/* <p>{item.release_date.split('-')[0]}</p> */}
+                                                    <p>{item.first_air_date.split('-')[0]}</p>
                                                 </TimeInfo>
-                                                <BigOverview>{sliceOverView(item.overview)}</BigOverview>
+                                                <BigOverview>{item.overview ? sliceOverView(item.overview) : '미리보기 없음'}</BigOverview>
                                             </Content>
                                         ))}
                                     </RelatedContents>
