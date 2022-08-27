@@ -228,8 +228,20 @@ interface IDetailProps {
 
 const MovieDetail = ({ id, subject }: IDetailProps) => {
     const navigate = useNavigate();
-    const onOverlayClick = () => navigate('/');
-    const onCloseModalClick = () => navigate('/');
+    const onOverlayClick = () => {
+        if (subject === 'movie') {
+            navigate(-1);
+        } else {
+            navigate('/');
+        }
+    }
+    const onCloseModalClick = () => {
+        if (subject === 'movie') {
+            navigate(-1);
+        } else {
+            navigate('/');
+        }
+    }
     const { scrollY } = useViewportScroll();
     const { data } = useQuery<IGetDetailResult>(['movies', 'detail'], () => getMovieDetail(+id));
     const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getMovieCasts(+id));

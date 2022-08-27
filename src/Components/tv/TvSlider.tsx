@@ -5,7 +5,6 @@ import { getTvshows, IGetContent } from '../../api';
 import { makeImagePath } from '../../utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../Loading/Loading';
 
 const SliderWrapper = styled.div`
     margin-bottom:300px;
@@ -194,7 +193,7 @@ const TvSlider = ({ subject }: ISliderProps) => {
                         })()
                     }
                 </BigTitle>
-                {isLoading ? <Loading /> :
+                {isLoading ? "" :
                     <AnimatePresence custom={isNext} initial={false} onExitComplete={toggleLeaving}>
                         <Row custom={isNext} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} transition={{ type: "tween", duration: 1 }} variants={rowVariants} initial="hidden" animate="visible" exit="exit" key={index} >
                             {data?.results.slice(offset * index, offset * index + offset).map(tv =>

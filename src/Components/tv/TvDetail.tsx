@@ -228,8 +228,21 @@ interface IDetailProps {
 
 const TvDetail = ({ id, subject }: IDetailProps) => {
     const navigate = useNavigate();
-    const onOverlayClick = () => navigate('/Tv');
-    const onCloseModalClick = () => navigate('/Tv');
+    const onOverlayClick = () => {
+        if (subject === 'tv') {
+            navigate(-1);
+        } else {
+            navigate('/Tv');
+        }
+    }
+    const onCloseModalClick = () => {
+        if (subject === 'tv') {
+            navigate(-1);
+        } else {
+            navigate('/Tv');
+        }
+    }
+
     const { scrollY } = useViewportScroll();
     const { data } = useQuery<ITV>(['tvshows', 'detail'], () => getTvDetail(+id));
     const { data: castData } = useQuery<IGetCasts>(['tvshows', 'casts'], () => getTvCasts(+id));

@@ -59,6 +59,7 @@ const Search = styled.form`
     align-items: center;
     color: white;
     position: relative;
+    cursor: pointer;
     svg {
       height: 25px;
     }

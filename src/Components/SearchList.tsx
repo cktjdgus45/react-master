@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { getSearchMovies, getSearchTvshows, IGetContent } from '../api';
+import { useEffect, useState } from 'react';
+import { IGetSearchMedia } from '../api';
 import styled from 'styled-components';
 import { makeImagePath } from '../utils';
-import LoadingSpinner from '../Components/Loading/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Row = styled.section`
     display: grid;
@@ -14,39 +14,35 @@ const Row = styled.section`
     margin-bottom: 80px;
 `
 
-const Box = styled.div<{ bgPath: string }>`
+const Box = styled(motion.div) <{ bgpath: string }>`
     width: 100%;
     height: 175px;
     background-color: ${props => props.theme.black.lighter};
     background-position: center;
     background-size: cover;
-    background-image: url(${props => props.bgPath}); 
+    background-image: url(${props => props.bgpath});
+    cursor: pointer;
     `
 interface searchListProps {
     keyword: string;
 }
 
 const SearchList = ({ keyword }: searchListProps) => {
+    const navigate = useNavigate();
     const BASE_PATH = "https://api.themoviedb.org/3";
     const API_KEY = '36eac08768828f2c4e7cd1f7365d208d';
-    const [data, setData] = useState<IGetContent>();
-    const [movieData, setMovieData] = useState<IGetContent>();
+    const [data, setData] = useState<IGetSearchMedia>();
+    const onBoxClick = (id: number, mediaType: string) => navigate(`/search/${mediaType}/${id}`);
     useEffect(() => {
-        fetch(`${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${keyword}`)
+        fetch(`${BASE_PATH}/search/multi?api_key=${API_KEY}&language=ko&query=${keyword}`)
             .then((response) => response.json())
             .then(data => setData(data));
-        fetch(`${BASE_PATH}/search/movie?api_key=${API_KEY}&language=ko&query=${keyword}`)
-            .then((response) => response.json())
-            .then(data => setMovieData(data));
     }, [keyword])
     return (
         <>
             <Row>
                 {
-                    data?.results.map(tv => <Box key={tv.id} bgPath={makeImagePath(tv.backdrop_path, 'w500')} >{tv.name}</Box>)
-                }
-                {
-                    movieData?.results.map(movie => <Box key={movie.id} bgPath={makeImagePath(movie.backdrop_path, 'w500')}>{movie.title}</Box>)
+                    data?.results.map(media => <Box layoutId={media.id + `${media.media_type}`} onClick={() => onBoxClick(media.id, media.media_type)} key={media.id} bgpath={makeImagePath(media.backdrop_path, 'w500')} >{media.media_type !== 'movie' ? media.name : media.title}</Box>)
                 }
             </Row>
         </>

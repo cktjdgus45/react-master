@@ -72,12 +72,23 @@ export interface IGetDetailResult {
     vote_average: number;
 }
 
+export interface IMedia {
+    backdrop_path: string;
+    id: number;
+    media_type: string;
+    title: string;
+    name: string;
+}
+
 export interface IGetCasts {
     cast: Cast[];
 }
 
 export interface IGetRelate {
     results: Relate[];
+}
+export interface IGetSearchMedia {
+    results: IMedia[];
 }
 
 export function getMovies(subject: string) {
@@ -135,6 +146,11 @@ export function getSearchTvshows(keyword: string) {
 }
 export function getSearchMovies(keyword: string) {
     return fetch(`${BASE_PATH}/search/movie?api_key=${API_KEY}&language=ko&query=${keyword}`).then(
+        (response) => response.json()
+    );
+}
+export function getSearchMedia(keyword: string) {
+    return fetch(`${BASE_PATH}/search/multi?api_key=${API_KEY}&language=ko&query=${keyword}`).then(
         (response) => response.json()
     );
 }
