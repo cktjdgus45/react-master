@@ -78,7 +78,7 @@ const Tv = () => {
         navigate(`/tvshows/${tvId}`);
     }
     useEffect(() => {
-        document.body.style.overflow = "scroll";
+        document.body.style.overflowY = "scroll";
     });
     return (
         <Wrapper>

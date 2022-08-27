@@ -4,7 +4,8 @@ import {
   Route,
 } from "react-router-dom";
 import styled from 'styled-components';
-import Header from './Components/Header';
+import Footer from './Components/Footer/Footer';
+import Header from './Components/Header/Header';
 import Home from './Routes/Home';
 import Search from './Routes/Search';
 import Tv from './Routes/Tv';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/tv" element={< Tv />} />
             <Route path="/" element={<Home />} />
           </Routes>
+          {/* <Footer></Footer> */}
         </Wrapper>
       </BrowserRouter>
     </>

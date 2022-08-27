@@ -81,7 +81,7 @@ const Home = () => {
         navigate(`/movies/${movieId}`);
     }
     useEffect(() => {
-        document.body.style.overflow = "scroll";
+        document.body.style.overflowY = "scroll";
     });
     return (
         <Wrapper>
