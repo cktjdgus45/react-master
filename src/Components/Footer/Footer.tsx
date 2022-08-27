@@ -7,31 +7,41 @@ const FooterSection = styled.footer`
     align-items: center;
     justify-content: center;
     color: ${props => props.theme.white.darker};
+    width: 100%;
+    height: 40vh;
+    padding: 50px 20%;
 `
 
 const Functions = styled.section`
     display: grid;
-    gap: 5px;
+    gap: 10px;
     grid-template-columns: repeat(4,1fr);
-    font-size: 16px;
-    margin-bottom: 15px;
+    font-size: 14px;
+    margin-bottom: 25px;
+    height: auto;
+    width: 100%;
 `
-const Query = styled.span`
-    font-size: 22px;
-    margin-bottom: 15px;
+const Query = styled.div`
+    width: 100%;
+    height: auto;
+    font-size: 15px;
+    margin-bottom: 45px;
 `
 const Info = styled.div`
     font-size: 12px;
-`
+    width: 100%;
+    margin-bottom: 25px;
+    `
 const InfoTitle = styled.div`
+    width: 100%;
     font-size: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 `
 
 const Footer = () => {
     return (
         <FooterSection>
-            <Query>질문이 있으신가요? 문의 전화:  010-0000-5946</Query>
+            <Query>질문이 있으신가요? 문의 전화: 010-0000-5946</Query>
             <Functions>
                 <span>자주 묻는 질문</span>
                 <span>고객 센터</span>
@@ -49,12 +59,12 @@ const Footer = () => {
                 <span>  넷플릭스에서</span>
             </Functions>
             <Info>
-                <InfoTitle>넷플릭스 대한민국</InfoTitle>
-                <h3>넷플릭스서비시스코리아 유한회사 통신판매업신고번호: 제2018-서울종로-0426호 전화번호: 080-001-9587</h3>
-                <h3>대표: 레지널드 숀 톰프슨</h3>
-                <h3>이메일 주소: korea@netflix.com</h3>
-                <h3>주소: 대한민국 서울특별시 종로구 우정국로 26, 센트로폴리스 A동 20층 우편번호 03161</h3>
-                <h3>사업자등록번호: 165-87-00119</h3>
+                <InfoTitle>넷릭스 코리아</InfoTitle>
+                <h3>넷릭스코리아 무한회사 통판매업번호: 제2022-화성봉담-0000호 전화번호: 000-000-8564</h3>
+                <h3>대표: 봉담 차성현</h3>
+                <h3>이메일 주소: cktjdgus45@.com</h3>
+                <h3>주소: 경기도 화성시 봉담읍 상리 35-10, 센트로폴리스 B동 26층 우편번호 18316</h3>
+                <h3>사업자등록번호: 000-00-00000</h3>
                 <h3>클라우드 호스팅: Amazon Web Services Inc.</h3>
                 <h3>공정거래위원회 웹사이트</h3>
             </Info>

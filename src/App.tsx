@@ -33,7 +33,7 @@ function App() {
             <Route path="/tv" element={< Tv />} />
             <Route path="/" element={<Home />} />
           </Routes>
-          {/* <Footer></Footer> */}
+          <Footer></Footer>
         </Wrapper>
       </BrowserRouter>
     </>
