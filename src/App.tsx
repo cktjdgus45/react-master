@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
 import Home from './Routes/Home';
+import Intro from './Routes/Intro';
 import Search from './Routes/Search';
 import Tv from './Routes/Tv';
 const Wrapper = styled.div`
@@ -20,8 +21,8 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <Header />
         <Wrapper>
-          <Header />
           <Routes>
             <Route path="/search/:mediaType/:id" element={<Search />} />
             <Route path="/search/:keyword" element={<Search />} />
@@ -33,8 +34,11 @@ function App() {
             <Route path="/tv" element={< Tv />} />
             <Route path="/" element={<Home />} />
           </Routes>
-          <Footer></Footer>
         </Wrapper>
+        <Routes>
+          <Route path="/react-master" element={<Intro />} />
+        </Routes>
+        <Footer></Footer>
       </BrowserRouter>
     </>
   )
