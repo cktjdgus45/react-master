@@ -4,7 +4,6 @@ import {
   Route,
 } from "react-router-dom";
 import styled from 'styled-components';
-import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
 import Home from './Routes/Home';
 import Intro from './Routes/Intro';
@@ -40,7 +39,6 @@ function App() {
           <Route path="/react-master" element={<Intro />} />
           <Route path="/login" element={<Login />} />
         </Routes>
-        <Footer></Footer>
       </BrowserRouter>
     </>
   )

@@ -13,9 +13,6 @@ const Wrapper = styled.div`
 const Search = () => {
     const searchDetailMatch = useMatch<string, string>("/search/:mediaType/:id");
     const searchMatches = useMatch<string, string>('/search/:keyword');
-    console.log(searchDetailMatch)
-    console.log(searchDetailMatch?.params.id)
-    console.log(searchDetailMatch?.params.mediaType)
     return (
         <Wrapper>
             {searchMatches?.params.keyword && (
