@@ -8,6 +8,7 @@ import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
 import Home from './Routes/Home';
 import Intro from './Routes/Intro';
+import Login from './Routes/Login';
 import Search from './Routes/Search';
 import Tv from './Routes/Tv';
 const Wrapper = styled.div`
@@ -37,6 +38,7 @@ function App() {
         </Wrapper>
         <Routes>
           <Route path="/react-master" element={<Intro />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <Footer></Footer>
       </BrowserRouter>

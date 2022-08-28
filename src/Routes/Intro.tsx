@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const Banner = styled.section`
     width: 100vw;
@@ -106,7 +108,17 @@ const ContentType = styled.div`
     }
 `
 
+interface IFormData {
+    email: string;
+}
+
 const Intro = () => {
+    const navigate = useNavigate();
+    const { register, handleSubmit, } = useForm<IFormData>();
+    const onSubmit = (data: IFormData) => {
+        navigate('/login', { state: { data } });
+        console.log(data);
+    }
     return (
         <>
             <Banner>
@@ -114,8 +126,8 @@ const Intro = () => {
                     <BigTitle>영화와 시리즈를<br />무제한으로.</BigTitle>
                     <MiddleTitle>다양한 디바이스에서 시청하세요. 언제든 해지하실 수 있습니다.</MiddleTitle>
                     <SmallTitle>시청할 준비가 되셨나요? 멤버십을 등록하거나 재시작하려면 이메일 주소를 입력하세요.</SmallTitle>
-                    <Form>
-                        <input type='text' placeholder='이메일 주소'></input>
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <input {...register("email")} type='text' placeholder='이메일 주소'></input>
                         <Button>시작하기</Button>
                     </Form>
                 </Start>
