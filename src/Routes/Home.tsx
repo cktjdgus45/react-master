@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { getMovies, IGetContent, } from '../api';
 import { makeImagePath } from '../utils';
-import { useNavigate, useMatch } from 'react-router-dom';
+import { useNavigate, useMatch, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import LoadingSpinner from '../Components/Loading/LoadingSpinner';
 import MovieDetail from '../Components/movie/MovieDetail';
 import MovieSlider from '../Components/movie/MovieSlider';
+import AuthService from '../firebase/auth_service';
 
 
 const Wrapper = styled.div`
@@ -70,10 +71,14 @@ const Devider = styled.div`
 `
 
 
+interface IHomeProps {
+    authService: AuthService;
+}
 
-
-const Home = () => {
+const Home = ({ authService }: IHomeProps) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log(location);
     const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
     const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
     const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], () => getMovies('top_rated'));
@@ -83,6 +88,14 @@ const Home = () => {
     useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
+
+    useEffect(() => {
+        authService.onAuthChange(user => {
+            if (!user) {
+                navigate('/react-master');
+            }
+        })
+    })
     return (
         <Wrapper>
             {

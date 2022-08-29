@@ -117,7 +117,6 @@ const Intro = () => {
     const { register, handleSubmit, } = useForm<IFormData>();
     const onSubmit = (data: IFormData) => {
         navigate('/login', { state: { data } });
-        console.log(data);
     }
     return (
         <>

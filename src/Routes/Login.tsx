@@ -1,7 +1,10 @@
-import React from 'react';
+import { User } from 'firebase/auth';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import AuthService from '../firebase/auth_service';
+
 const LoginWrapper = styled.section`
     width: 100vw;
     height: 100vh;
@@ -48,7 +51,7 @@ const LoginButton = styled.button`
 
 interface IFormData {
     email: string;
-    password: number;
+    password: string;
 }
 
 interface ILocationData {
@@ -59,13 +62,40 @@ interface ILocationData {
     }
 }
 
-const Login = () => {
+interface ILoginProps {
+    authService: AuthService;
+}
+
+
+const Login = ({ authService }: ILoginProps) => {
+    const navigate = useNavigate();
     const { register, handleSubmit, } = useForm<IFormData>();
     const location = useLocation()! as unknown as ILocationData;
     const email = location.state.data.email;
-    const onSubmit = (data: IFormData) => {
-        console.log(data);
+
+    const goToHome = (user: User) => {
+        navigate('/', {
+            state: {
+                uid: user.uid,
+                displayName: user.displayName,
+                photoUrl: user.photoURL
+            }
+        });
     }
+
+    const onSubmit = (data: IFormData) => {
+        authService.emailLogin(data.email, data.password).then(data => goToHome(data.user));
+    }
+    const onClick = (socialName: string) => {
+        authService.login(socialName)?.then(data => goToHome(data.user));
+    }
+
+    useEffect(() => {
+        authService.onAuthChange((user: User | null) => {
+            user && goToHome(user);
+        })
+    })
+
     return (
         <LoginWrapper>
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -73,6 +103,8 @@ const Login = () => {
                 <Input type='text' placeholder='이메일 주소 또는 전화번호' defaultValue={email ? email : ''}{...register('email')}></Input>
                 <Input type='password' placeholder='비밀번호' {...register('password')}></Input>
                 <LoginButton>로그인</LoginButton>
+                <button onClick={() => onClick('Google')}>Google</button>
+                <button onClick={() => onClick('Github')}>Github</button>
             </Form>
         </LoginWrapper>
     )

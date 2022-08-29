@@ -1,3 +1,5 @@
+import { User } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -5,6 +7,7 @@ import {
 } from "react-router-dom";
 import styled from 'styled-components';
 import Header from './Components/Header/Header';
+import AuthService from './firebase/auth_service';
 import Home from './Routes/Home';
 import Intro from './Routes/Intro';
 import Login from './Routes/Login';
@@ -16,28 +19,38 @@ const Wrapper = styled.div`
   padding-left: 60px;
 `;
 
-function App() {
+interface IAppProps {
+  authService: AuthService
+}
 
+function App({ authService }: IAppProps) {
+  const [user, setUser] = useState<User | null>();
+  console.log(user);
+  useEffect(() => {
+    authService.onAuthChange(user => {
+      setUser(user);
+    })
+  })
   return (
     <>
       <BrowserRouter>
-        <Header />
+        <Header authService={authService} />
         <Wrapper>
           <Routes>
             <Route path="/search/:mediaType/:id" element={<Search />} />
             <Route path="/search/:keyword" element={<Search />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/movies/:movieId/:subject" element={<Home />} />
-            <Route path="/movies/:movieId/" element={<Home />} />
+            <Route path="/movies/:movieId/:subject" element={<Home authService={authService} />} />
+            <Route path="/movies/:movieId/" element={<Home authService={authService} />} />
             <Route path="/tvshows/:tvId/:subject" element={<Tv />} />
             <Route path="/tvshows/:tvId/" element={<Tv />} />
             <Route path="/tv" element={< Tv />} />
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home authService={authService} />} />
           </Routes>
         </Wrapper>
         <Routes>
           <Route path="/react-master" element={<Intro />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login authService={authService} />} />
         </Routes>
       </BrowserRouter>
     </>

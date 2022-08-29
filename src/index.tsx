@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import AuthService from './firebase/auth_service';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -97,6 +98,8 @@ button{
 
 `;
 
+const authService = new AuthService();
+
 const queryClient = new QueryClient();
 
 root.render(
@@ -104,7 +107,7 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <App />
+        <App authService={authService} />
       </ThemeProvider>
     </QueryClientProvider>
   </RecoilRoot>
