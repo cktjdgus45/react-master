@@ -70,8 +70,8 @@ interface ILoginProps {
 const Login = ({ authService }: ILoginProps) => {
     const navigate = useNavigate();
     const { register, handleSubmit, } = useForm<IFormData>();
-    const location = useLocation()! as unknown as ILocationData;
-    const email = location.state.data.email;
+    const location = useLocation()! as unknown as ILocationData | null;
+    const email = location?.state && location.state.data.email;
 
     const goToHome = (user: User) => {
         navigate('/', {

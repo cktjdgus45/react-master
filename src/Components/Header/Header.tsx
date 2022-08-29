@@ -91,6 +91,18 @@ const Input = styled(motion.input)`
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.white.lighter};
 `
+
+const AuthButton = styled.button`
+    border-radius: 3px;
+    text-align: center;
+    padding: 5px 10px;
+    margin-left: 25px;
+    border: none;
+    background-color: ${props => props.theme.red};
+    font-size: 16px;
+    color: ${props => props.theme.white.lighter};
+`
+
 interface IHeaderProps {
     authService: AuthService
 }
@@ -109,6 +121,7 @@ const Header = ({ authService }: IHeaderProps) => {
     const tvMatch = useMatch('tv');
     const toggleSearch = () => setSearchOpen(prev => !prev);
     const onLogOut = () => authService.logout();
+    const goToLogin = () => navigate('/login');
     useEffect(() => {
         scrollY.onChange(() => {
             if (scrollY.get() < 80) {
@@ -148,7 +161,6 @@ const Header = ({ authService }: IHeaderProps) => {
                                 시리즈 {tvMatch && <Circle layoutId='circle' />}
                             </Link>
                         </Item>
-                        <Item onClick={onLogOut}>로그아웃</Item>
                     </Items>
                 ) : null}
             </Col>
@@ -171,11 +183,12 @@ const Header = ({ authService }: IHeaderProps) => {
                         </motion.svg>
                         <Input {...register('keyword', { required: true, minLength: 2 })} animate={{ scaleX: searchOpen ? 1 : 0 }} transition={{ type: 'linear' }} placeholder='제목,사람,장르' />
                     </Search>
+                    <AuthButton onClick={onLogOut}>로그아웃</AuthButton>
                 </Col>
             ) : (
-                <button>
+                <AuthButton onClick={goToLogin}>
                     로그인
-                </button>
+                </AuthButton>
             )}
         </Nav>
     )
