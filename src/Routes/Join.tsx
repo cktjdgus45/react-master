@@ -107,7 +107,7 @@ interface ILoginProps {
 }
 
 
-const Login = ({ authService }: ILoginProps) => {
+const Join = ({ authService }: ILoginProps) => {
     const navigate = useNavigate();
     const { register, handleSubmit, } = useForm<IFormData>();
     const location = useLocation()! as unknown as ILocationData | null;
@@ -122,12 +122,9 @@ const Login = ({ authService }: ILoginProps) => {
             }
         });
     }
-    const goJoin = () => {
-        navigate('/join');
-    }
 
     const onSubmit = (data: IFormData) => {
-        authService.emailLogin(data.email, data.password).then(data => goToHome(data.user));
+        authService.emailJoin(data.email, data.password).then(data => goToHome(data.user));
     }
     const onClick = (socialName: string) => {
         authService.login(socialName)?.then(data => goToHome(data.user));
@@ -143,10 +140,10 @@ const Login = ({ authService }: ILoginProps) => {
     return (
         <LoginWrapper>
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <BigTitle>로그인</BigTitle>
+                <BigTitle>회원가입</BigTitle>
                 <Input type='text' placeholder='이메일 주소 또는 전화번호' defaultValue={email ? email : ''}{...register('email')}></Input>
                 <Input type='password' placeholder='비밀번호' {...register('password')}></Input>
-                <LoginButton>로그인</LoginButton>
+                <LoginButton>회원가입</LoginButton>
                 <SocialAuthBox>
                     <SocialButton onClick={() => onClick('Google')}>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/36px-Google_%22G%22_Logo.svg.png?20210618182606 1.5x, https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/48px-Google_%22G%22_Logo.svg.png?20210618182606 2x" alt="google" />
@@ -158,12 +155,12 @@ const Login = ({ authService }: ILoginProps) => {
                     </SocialButton>
                 </SocialAuthBox>
                 <JoinModal>
-                    <span>Netflix 회원이 아닌가요?</span>
-                    <span className='goJoinNow' onClick={goJoin}>지금 가입하세요.</span>
+                    <span>다른 플랫폼 계정이 있으신가요?</span>
+                    <span className='goJoinNow'>그 계정으로도 가입이 가능합니다.</span>
                 </JoinModal>
             </Form>
         </LoginWrapper>
     )
 }
 
-export default Login;
+export default Join;

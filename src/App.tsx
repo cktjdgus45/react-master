@@ -10,6 +10,7 @@ import Header from './Components/Header/Header';
 import AuthService from './firebase/auth_service';
 import Home from './Routes/Home';
 import Intro from './Routes/Intro';
+import Join from './Routes/Join';
 import Login from './Routes/Login';
 import Search from './Routes/Search';
 import Tv from './Routes/Tv';
@@ -51,6 +52,7 @@ function App({ authService }: IAppProps) {
         <Routes>
           <Route path="/react-master" element={<Intro />} />
           <Route path="/login" element={<Login authService={authService} />} />
+          <Route path="/join" element={<Join authService={authService} />} />
         </Routes>
       </BrowserRouter>
     </>
