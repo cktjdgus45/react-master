@@ -32,9 +32,6 @@ const Box = styled(motion.div) <{ bgphoto: string }>`
     &:nth-child(7n-1){
         transform-origin: center right;
     }
-    /* &:last-child{
-        transform-origin: center right;
-    } */
 `;
 
 const Info = styled(motion.div)`
@@ -43,7 +40,7 @@ const Info = styled(motion.div)`
     position: absolute;
     width: 100%;
     bottom: 0;
-    background: ${(props) => props.theme.black.lighter};
+    background: hsla(0,0%,100%,.2);
     h4{
         font-size: 18px;
         text-align: center;
