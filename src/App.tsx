@@ -1,5 +1,3 @@
-import { User } from 'firebase/auth';
-import { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -25,13 +23,6 @@ interface IAppProps {
 }
 
 function App({ authService }: IAppProps) {
-  const [user, setUser] = useState<User | null>();
-  console.log(user);
-  useEffect(() => {
-    authService.onAuthChange(user => {
-      setUser(user);
-    })
-  })
   return (
     <>
       <BrowserRouter>

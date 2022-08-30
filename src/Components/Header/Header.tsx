@@ -96,12 +96,27 @@ const AuthButton = styled.button`
     border-radius: 3px;
     text-align: center;
     padding: 5px 10px;
-    margin-left: 25px;
+    margin-left: 15px;
     border: none;
     background-color: ${props => props.theme.red};
     font-size: 16px;
     color: ${props => props.theme.white.lighter};
 `
+const Profile = styled.div<{ bgPhoto: string }>`
+    width: 30px;
+    height: 30px;
+    border-radius: 1px;
+    background-image: url(${props => props.bgPhoto});
+    background-position: center;
+    background-size: cover;
+    margin-left: 15px;
+
+`;
+const UserName = styled.h3`
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: 500;
+`;
 
 interface IHeaderProps {
     authService: AuthService
@@ -183,6 +198,8 @@ const Header = ({ authService }: IHeaderProps) => {
                         </motion.svg>
                         <Input {...register('keyword', { required: true, minLength: 2 })} animate={{ scaleX: searchOpen ? 1 : 0 }} transition={{ type: 'linear' }} placeholder='제목,사람,장르' />
                     </Search>
+                    <Profile bgPhoto={isLogined.photoURL ? isLogined.photoURL : 'https://occ-0-988-993.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABRFZFS8db1R43jhQH8qYonvQ7XOdqfn1JEgczxD7Uz5vCGx-vnN18_sI8xORbinwQJzWgucNziIuHH8mhFA1iR7CGB8A4ms.png?r=eea'}></Profile>
+                    <UserName>{isLogined.displayName ? isLogined.displayName : isLogined.email}</UserName>
                     <AuthButton onClick={onLogOut}>로그아웃</AuthButton>
                 </Col>
             ) : (
