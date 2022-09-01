@@ -42,6 +42,7 @@ export interface IContent {
     backdrop_path: string;
     poster_path: string;
     title: string;
+    original_title: string;
     name: string;
     overview: string;
     vote_average: number;
@@ -155,3 +156,29 @@ export function getSearchMedia(keyword: string) {
     );
 }
 
+//youtube
+
+const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
+const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
+
+interface IYoutubeId {
+    id: {
+        videoId: string;
+    },
+}
+
+export interface IYouTubeResult {
+    kind: string;
+    etag: string;
+    nextPageToken: string;
+    regionCode: string;
+    pageInfo: {};
+    items: IYoutubeId[];
+}
+
+export function getSearchYoutube(query: string) {
+    if (!query) return;
+    return fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${query}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`).then(
+        (response) => response.json()
+    )
+}

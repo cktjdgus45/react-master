@@ -1,11 +1,11 @@
 
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getMovies, IGetContent, } from '../api';
+import { getMovies, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
-import { useNavigate, useMatch, useLocation } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import LoadingSpinner from '../Components/Loading/LoadingSpinner';
 import MovieDetail from '../Components/movie/MovieDetail';
 import MovieSlider from '../Components/movie/MovieSlider';
@@ -77,18 +77,25 @@ interface IHomeProps {
 
 const Home = ({ authService }: IHomeProps) => {
     const navigate = useNavigate();
-    const location = useLocation();
-    console.log(location);
     const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
     const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
-    const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], () => getMovies('top_rated'));
+    const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
+    const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], async () => await getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
     useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
-
+    useEffect(() => {
+        if (!isLoading) {
+            const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
+            const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
+            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[11].original_title}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
+                .then((response) => response.json())
+                .then((response2) => setYoutubeVideo(response2))
+        }
+    }, [data?.results, isLoading])
     useEffect(() => {
         authService.onAuthChange(user => {
             if (!user) {
@@ -96,15 +103,21 @@ const Home = ({ authService }: IHomeProps) => {
             }
         })
     })
+    console.log(youtubeVideo?.items[0].id.videoId);
     return (
         <Wrapper>
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-                            <Title>{data?.results[0].title}</Title>
-                            <Overview>{data?.results[0].overview}</Overview>
-                            {data && <DetailButton onClick={() => onDetailClick(data?.results[0].id)}>상세 정보</DetailButton>}
+                        <Banner bgphoto={makeImagePath(data?.results[11].backdrop_path || "")}>
+                            <Title>{data?.results[11].title}</Title>
+                            <Overview>{data?.results[11].overview}</Overview>
+                            {data && <DetailButton onClick={() => onDetailClick(data?.results[11].id)}>상세 정보</DetailButton>}
+                            <>
+                                <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
+                                    src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=1&modestbranding=1&showinfo=0`}
+                                    frameBorder="0" allowFullScreen />
+                            </>
                         </Banner>
                         <BannerSlider>
                             <MovieSlider subject='now_playing'></MovieSlider>
