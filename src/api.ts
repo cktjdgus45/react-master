@@ -43,6 +43,7 @@ export interface IContent {
     poster_path: string;
     title: string;
     original_title: string;
+    original_name: string;
     name: string;
     overview: string;
     vote_average: number;
