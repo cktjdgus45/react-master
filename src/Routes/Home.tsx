@@ -133,8 +133,8 @@ const Home = ({ authService }: IHomeProps) => {
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
     }
-    const setReadyStateTrue = () => {
-        setReady(() => true);
+    const setReadyAfterFiveMinute = () => {
+        setTimeout(() => setReady(() => true), 5000);
     }
     useEffect(() => {
         document.body.style.overflowY = "scroll";
@@ -160,7 +160,7 @@ const Home = ({ authService }: IHomeProps) => {
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        {setTimeout(setReadyStateTrue, 5000)}
+                        {setReadyAfterFiveMinute()}
                         <Banner bgphoto={makeImagePath(data?.results[10].backdrop_path || "")}>
                             {ready ? (
                                 <FrameWrapper>

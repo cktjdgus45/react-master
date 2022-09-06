@@ -123,13 +123,13 @@ const Tv = () => {
     }
     const [mute, setMute] = useState(1);
     const [ready, setReady] = useState(false);
-    const setReadyStateTrue = () => {
-        setReady(() => true);
-    }
     const onSoundClick = () => {
         setMute(() => {
             return mute ? 0 : 1;
         })
+    }
+    const setReadyAfterFiveMinute = () => {
+        setTimeout(() => setReady(() => true), 5000);
     }
     useEffect(() => {
         document.body.style.overflowY = "scroll";
@@ -148,7 +148,7 @@ const Tv = () => {
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        {setTimeout(setReadyStateTrue, 5000)}
+                        {setReadyAfterFiveMinute()}
                         <Banner bgphoto={makeImagePath(data?.results[1].backdrop_path || "")}>
                             {ready ? (
                                 <FrameWrapper>
