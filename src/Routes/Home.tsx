@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { getMovies, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../Components/Loading/LoadingSpinner';
 import MovieDetail from '../Components/movie/MovieDetail';
@@ -79,7 +79,7 @@ const FrameContainer = styled.div`
     top: 0;
     iframe{
         position: absolute; 
-    top: 0; 
+    top: -104px; 
     left: 0; 
     width: 100%; 
     height: 100%;
@@ -105,6 +105,13 @@ const SoundButton = styled.button`
     right: 30px;
     top: 75vh;
 `
+const MovieInfo = styled(motion.div)`
+    position: absolute;
+    left: 25px;
+    top: 350px;
+    width: 40%;
+    height: 200px;
+`
 
 interface IHomeProps {
     authService: AuthService;
@@ -116,6 +123,7 @@ const Home = ({ authService }: IHomeProps) => {
     const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
     const [mute, setMute] = useState(1);
+    const [ready, setReady] = useState(false);
     const onSoundClick = () => {
         setMute(() => {
             return mute ? 0 : 1;
@@ -124,6 +132,9 @@ const Home = ({ authService }: IHomeProps) => {
     const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], async () => await getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         navigate(`/movies/${movieId}`);
+    }
+    const setReadyStateTrue = () => {
+        setReady(() => true);
     }
     useEffect(() => {
         document.body.style.overflowY = "scroll";
@@ -149,19 +160,29 @@ const Home = ({ authService }: IHomeProps) => {
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
+                        {setTimeout(setReadyStateTrue, 5000)}
                         <Banner bgphoto={makeImagePath(data?.results[10].backdrop_path || "")}>
-                            <Title>{data?.results[10].title}</Title>
-                            <Overview>{data?.results[10].overview}</Overview>
-                            {data && <DetailButton onClick={() => onDetailClick(data?.results[10].id)}>상세 정보</DetailButton>}
-                            <FrameWrapper>
-                                <FrameContainer>
-                                    <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
-                                        src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
-                                        frameBorder="0" allowFullScreen />
-                                </FrameContainer>
-                            </FrameWrapper>
+                            {ready ? (
+                                <FrameWrapper>
+                                    <FrameContainer>
+                                        <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
+                                            src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
+                                            frameBorder="0" allowFullScreen />
+                                    </FrameContainer>
+                                    <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1.5 }}>
+                                        <Title>{data?.results[10].title}</Title>
+                                        {data && <DetailButton onClick={() => onDetailClick(data?.results[10].id)}>상세 정보</DetailButton>}
+                                    </MovieInfo>
+                                </FrameWrapper>
+                            ) : (
+                                <motion.div layoutId='test' style={{ width: '70%' }}>
+                                    <Title>{data?.results[10].title}</Title>
+                                    <Overview>{data?.results[10].overview}</Overview>
+                                    {data && <DetailButton onClick={() => onDetailClick(data?.results[10].id)}>상세 정보</DetailButton>}
+                                </motion.div>
+                            )}
                         </Banner>
-                        <SoundButton onClick={onSoundClick}>{!mute ? <FontAwesomeIcon icon={faVolumeOff} /> : <FontAwesomeIcon icon={faVolumeXmark} />}</SoundButton>
+                        {ready && (<SoundButton onClick={onSoundClick}>{!mute ? <FontAwesomeIcon icon={faVolumeOff} /> : <FontAwesomeIcon icon={faVolumeXmark} />}</SoundButton>)}
                         <BannerSlider>
                             <MovieSlider subject='now_playing'></MovieSlider>
                         </BannerSlider>

@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { getTvshows, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../Components/Loading/LoadingSpinner';
 import TvSlider from '../Components/tv/TvSlider';
@@ -78,7 +78,7 @@ const FrameContainer = styled.div`
     top: 0;
     iframe{
         position: absolute; 
-    top: 0; 
+    top: -104px; 
     left: 0; 
     width: 100%; 
     height: 100%;
@@ -104,6 +104,13 @@ const SoundButton = styled.button`
     right: 30px;
     top: 75vh;
 `
+const MovieInfo = styled(motion.div)`
+    position: absolute;
+    left: 25px;
+    top: 350px;
+    width: 40%;
+    height: 200px;
+`
 
 const Tv = () => {
     const navigate = useNavigate();
@@ -115,6 +122,10 @@ const Tv = () => {
         navigate(`/tvshows/${tvId}`);
     }
     const [mute, setMute] = useState(1);
+    const [ready, setReady] = useState(false);
+    const setReadyStateTrue = () => {
+        setReady(() => true);
+    }
     const onSoundClick = () => {
         setMute(() => {
             return mute ? 0 : 1;
@@ -127,7 +138,7 @@ const Tv = () => {
         if (!isLoading) {
             const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
             const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
-            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[2].original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
+            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[1].original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
                 .then((response) => response.json())
                 .then((response2) => setYoutubeVideo(response2))
         }
@@ -137,19 +148,30 @@ const Tv = () => {
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        <Banner bgphoto={makeImagePath(data?.results[2].backdrop_path || "")}>
-                            <Title>{data?.results[2].name}</Title>
-                            <Overview>{data?.results[2].overview}</Overview>
-                            {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
-                            <FrameWrapper>
-                                <FrameContainer>
-                                    <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
-                                        src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
-                                        frameBorder="0" allowFullScreen />
-                                </FrameContainer>
-                            </FrameWrapper>
+                        {setTimeout(setReadyStateTrue, 5000)}
+                        <Banner bgphoto={makeImagePath(data?.results[1].backdrop_path || "")}>
+                            {ready ? (
+                                <FrameWrapper>
+                                    <FrameContainer>
+                                        <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
+                                            src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
+                                            frameBorder="0" allowFullScreen />
+                                    </FrameContainer>
+                                    <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1.5 }}>
+                                        <Title>{data?.results[10].original_name}</Title>
+                                        {data && <DetailButton onClick={() => onDetailClick(data?.results[10].id)}>상세 정보</DetailButton>}
+                                    </MovieInfo>
+                                </FrameWrapper>
+                            ) : (
+                                <motion.div layoutId='test' style={{ width: '70%' }}>
+                                    <Title>{data?.results[1].name}</Title>
+                                    <Overview>{data?.results[1].overview}</Overview>
+                                    {data && <DetailButton onClick={() => onDetailClick(data?.results[1].id)}>상세 정보</DetailButton>}
+
+                                </motion.div>
+                            )}
                         </Banner>
-                        <SoundButton onClick={onSoundClick}>{!mute ? <FontAwesomeIcon icon={faVolumeOff} /> : <FontAwesomeIcon icon={faVolumeXmark} />}</SoundButton>
+                        {ready && <SoundButton onClick={onSoundClick}>{!mute ? <FontAwesomeIcon icon={faVolumeOff} /> : <FontAwesomeIcon icon={faVolumeXmark} />}</SoundButton>}
                         <BannerSlider>
                             <TvSlider subject='on_the_air'></TvSlider>
                         </BannerSlider>
