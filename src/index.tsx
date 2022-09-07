@@ -80,7 +80,7 @@ body {
   line-height: 1.2;
   font-family: 'Spoqa Han Sans Neo', 'sans-serif';
   color:${props => props.theme.white.darker};
-  background-color: black;
+  background-color: ${props => props.theme.black.veryDark};
   overflow-x: hidden;
 }
 a {

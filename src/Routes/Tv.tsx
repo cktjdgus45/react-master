@@ -13,7 +13,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeOff, faVolumeXmark } from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled.div`
-    background: black;
 `
 
 const Banner = styled.div<{ bgphoto: string }>`

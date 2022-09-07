@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const SliderWrapper = styled.div`
     margin-bottom:300px;
+    padding-left: 60px;
 `
 
 const Row = styled(motion.div)`

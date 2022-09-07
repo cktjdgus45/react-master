@@ -14,7 +14,6 @@ import AuthService from '../firebase/auth_service';
 
 
 const Wrapper = styled.div`
-    background: black;
 `
 
 const Banner = styled.div<{ bgphoto: string }>`

@@ -15,7 +15,6 @@ import Tv from './Routes/Tv';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding-left: 60px;
 `;
 
 interface IAppProps {
