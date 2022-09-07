@@ -168,7 +168,7 @@ const Home = ({ authService }: IHomeProps) => {
                                             src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
                                             frameBorder="0" allowFullScreen />
                                     </FrameContainer>
-                                    <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1.5 }}>
+                                    <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
                                         <Title>{data?.results[10].title}</Title>
                                         {data && <DetailButton onClick={() => onDetailClick(data?.results[10].id)}>상세 정보</DetailButton>}
                                     </MovieInfo>
