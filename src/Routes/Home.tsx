@@ -11,7 +11,7 @@ import LoadingSpinner from '../Components/Loading/LoadingSpinner';
 import MovieDetail from '../Components/movie/MovieDetail';
 import MovieSlider from '../Components/movie/MovieSlider';
 import AuthService from '../firebase/auth_service';
-
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 const Wrapper = styled.div`
 `
@@ -141,7 +141,7 @@ const Home = ({ authService }: IHomeProps) => {
     useEffect(() => {
         if (!isLoading) {
             const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
-            const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
+            const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
             fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[10].original_title}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
                 .then((response) => response.json())
                 .then((response2) => setYoutubeVideo(response2))
@@ -154,19 +154,55 @@ const Home = ({ authService }: IHomeProps) => {
             }
         })
     })
+    const opts = {
+        height: '720',
+        width: '405',
+        playerVars: {
+            autoplay: 1,
+            controls: 0,
+            autohide: 1,
+            rel: 0,
+            mute: mute,
+            modestbranding: 1,
+            showinfo: 0,
+        },
+    }
+    const onReady: YouTubeProps['onReady'] = (event) => {
+        const youtubePlayer = event.target;
+        youtubePlayer.playVideo();
+        function setTimeCallback() {
+            setReady(() => false);
+        }
+        const playingTime = (youtubePlayer.getDuration() - 2) * 1000;
+        setTimeout(setTimeCallback, playingTime);
+    }
+    const onEnd = () => {
+        console.log('youtube end');
+        setReady(() => false);
+    }
+    useEffect(() => {
+        setReadyAfterFiveMinute()
+    }, [])
     return (
         <Wrapper>
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        {setReadyAfterFiveMinute()}
                         <Banner bgphoto={makeImagePath(data?.results[10].backdrop_path || "")}>
                             {ready ? (
                                 <FrameWrapper>
                                     <FrameContainer>
-                                        <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
+                                        {/* <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
                                             src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
-                                            frameBorder="0" allowFullScreen />
+                                            frameBorder="0" allowFullScreen /> */}
+                                        <YouTube
+                                            videoId={youtubeVideo?.items[0].id.videoId}
+                                            id="ytplayer"
+                                            title='official-trailer'
+                                            opts={opts}
+                                            onReady={onReady}
+                                            onEnd={onEnd}
+                                        />
                                     </FrameContainer>
                                     <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
                                         <Title>{data?.results[10].title}</Title>

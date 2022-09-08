@@ -11,6 +11,7 @@ import TvSlider from '../Components/tv/TvSlider';
 import TvDetail from '../Components/tv/TvDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeOff, faVolumeXmark } from '@fortawesome/free-solid-svg-icons'
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 const Wrapper = styled.div`
 `
@@ -137,35 +138,69 @@ const Tv = () => {
         if (!isLoading) {
             const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
             const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
-            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[1].original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
+            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[2].original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
                 .then((response) => response.json())
                 .then((response2) => setYoutubeVideo(response2))
         }
     }, [data?.results, isLoading])
+
+    const opts = {
+        height: '720',
+        width: '405',
+        playerVars: {
+            autoplay: 1,
+            controls: 0,
+            autohide: 1,
+            rel: 0,
+            mute: mute,
+            modestbranding: 1,
+            showinfo: 0,
+        },
+    }
+    const onReady: YouTubeProps['onReady'] = (event) => {
+        const youtubePlayer = event.target;
+        youtubePlayer.playVideo();
+        function setTimeCallback() {
+            setReady(() => false);
+        }
+        const playingTime = (youtubePlayer.getDuration() - 3.5) * 1000;
+        setTimeout(setTimeCallback, playingTime);
+    }
+    const onEnd = () => {
+        console.log('youtube end');
+        setReady(() => false);
+    }
+    useEffect(() => {
+        setReadyAfterFiveMinute()
+    }, [])
     return (
         <Wrapper>
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        {setReadyAfterFiveMinute()}
-                        <Banner bgphoto={makeImagePath(data?.results[1].backdrop_path || "")}>
+                        <Banner bgphoto={makeImagePath(data?.results[2].backdrop_path || "")}>
                             {ready ? (
                                 <FrameWrapper>
                                     <FrameContainer>
-                                        <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
-                                            src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
-                                            frameBorder="0" allowFullScreen />
+                                        <YouTube
+                                            videoId={youtubeVideo?.items[0].id.videoId}
+                                            id="ytplayer"
+                                            title='official-trailer'
+                                            opts={opts}
+                                            onReady={onReady}
+                                            onEnd={onEnd}
+                                        />
                                     </FrameContainer>
                                     <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
-                                        <Title>{data?.results[10].original_name}</Title>
-                                        {data && <DetailButton onClick={() => onDetailClick(data?.results[1].id)}>상세 정보</DetailButton>}
+                                        <Title>{data?.results[2].name}</Title>
+                                        {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
                                     </MovieInfo>
                                 </FrameWrapper>
                             ) : (
                                 <motion.div layoutId='test' style={{ width: '70%' }}>
-                                    <Title>{data?.results[1].name}</Title>
-                                    <Overview>{data?.results[1].overview}</Overview>
-                                    {data && <DetailButton onClick={() => onDetailClick(data?.results[1].id)}>상세 정보</DetailButton>}
+                                    <Title>{data?.results[2].name}</Title>
+                                    <Overview>{data?.results[2].overview}</Overview>
+                                    {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
 
                                 </motion.div>
                             )}
