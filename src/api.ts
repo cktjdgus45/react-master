@@ -11,6 +11,7 @@ export interface ITV {
     genres: Genre[];
     episode_run_time: [];
     name: string;
+    original_name: string;
     overview: string;
     backdrop_path: string;
     vote_average: number;
