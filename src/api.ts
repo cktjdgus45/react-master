@@ -71,6 +71,7 @@ export interface IGetDetailResult {
     release_date: string;
     runtime: number;
     title: string;
+    original_title: string;
     vote_average: number;
 }
 

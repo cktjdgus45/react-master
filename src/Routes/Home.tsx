@@ -77,8 +77,8 @@ const FrameContainer = styled.div`
     left: -100%;
     top: 0;
     iframe{
-        position: absolute; 
-    top: -104px; 
+    position: absolute; 
+    top: -80px; 
     left: 0; 
     width: 100%; 
     height: 100%;

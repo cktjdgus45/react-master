@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getMovieCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetDetailResult, IGetRelate } from '../../api';
+import { getMovieCasts, getMovieDetail, getRelatedMovie, IGetCasts, IGetDetailResult, IGetRelate, IYouTubeResult } from '../../api';
 import { makeImagePath } from '../../utils';
 import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 const MovieDetailWrapper = styled(motion.div)``;
 
@@ -70,6 +71,8 @@ const BigTitle = styled.h3`
     top: -60px;
     padding: 20px;
 `;
+
+
 
 const BigOverview = styled.p`
     color: ${props => props.theme.white.lighter};
@@ -221,6 +224,25 @@ const SmallTitle = styled.h3`
     color: ${props => props.theme.white.lighter};
 `
 
+const FrameContainer = styled.div`
+    position: absolute;
+    padding-bottom: 39.25%;
+    padding-top: 37%;
+    width: 300%;
+    left: -100%;
+    top: 0;
+    iframe{
+        position: absolute; 
+    top: -140px; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    }
+`
+const FrameWrapper = styled.div`
+    overflow: hidden;
+    max-width: 100%;
+`
 interface IDetailProps {
     id: string;
     subject?: string;
@@ -244,8 +266,13 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
     }
     const { scrollY } = useViewportScroll();
     const { data } = useQuery<IGetDetailResult>(['movies', 'detail'], () => getMovieDetail(+id));
-    const { data: castData } = useQuery<IGetCasts>(['movies', 'casts'], () => getMovieCasts(+id));
+    const { data: castData, isLoading } = useQuery<IGetCasts>(['movies', 'casts'], () => getMovieCasts(+id));
     const { data: relatedMovies } = useQuery<IGetRelate>(['movies', 'related'], () => getRelatedMovie(+id));
+    const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
+    const [ready, setReady] = useState(false);
+    const setReadyAfterFiveMinute = () => {
+        setTimeout(() => setReady(() => true), 5000);
+    }
     const casts = castData?.cast.slice(0, 4);
     const relateMovies = relatedMovies?.results.slice(0, 12);
     const sliceOverView = (overview: string) => {
@@ -254,10 +281,48 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
         words = words.slice(0, words.lastIndexOf('! ')) + '..';
         return words;
     }
-
+    useEffect(() => {
+        if (!isLoading) {
+            const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
+            const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
+            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.original_title}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
+                .then((response) => response.json())
+                .then((response2) => setYoutubeVideo(response2))
+        }
+    }, [data, isLoading])
     useEffect(() => {
         document.body.style.overflow = "hidden";
     });
+    useEffect(() => {
+        setReadyAfterFiveMinute()
+    }, [])
+    const opts = {
+        height: '720',
+        width: '405',
+        playerVars: {
+            autoplay: 1,
+            controls: 0,
+            autohide: 1,
+            loop: 1,
+            rel: 0,
+            mute: 1,
+            modestbranding: 1,
+            showinfo: 0,
+        },
+    }
+    const onReady: YouTubeProps['onReady'] = (event) => {
+        const youtubePlayer = event.target;
+        youtubePlayer.playVideo();
+        function setTimeCallback() {
+            setReady(() => false);
+        }
+        const playingTime = (youtubePlayer.getDuration() - 2) * 1000;
+        setTimeout(setTimeCallback, playingTime);
+    }
+    const onEnd = () => {
+        console.log('youtube end');
+        setReady(() => false);
+    }
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
@@ -265,7 +330,22 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
                 {
                     data && (
                         <>
-                            <BigCover style={{ backgroundImage: `linear-gradient(to top,black,transparent),url(${makeImagePath(data.backdrop_path)})` }} />
+                            <BigCover style={{ backgroundImage: `linear-gradient(to top,black,transparent),url(${makeImagePath(data.backdrop_path)})` }}>
+                                {ready && (
+                                    <FrameWrapper>
+                                        <FrameContainer>
+                                            <YouTube
+                                                videoId={youtubeVideo?.items[0].id.videoId}
+                                                id="ytplayer"
+                                                title='official-trailer'
+                                                opts={opts}
+                                                onReady={onReady}
+                                                onEnd={onEnd}
+                                            />
+                                        </FrameContainer>
+                                    </FrameWrapper>
+                                )}
+                            </BigCover>
                             <CloseModal onClick={onCloseModalClick}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-uia="previewModal-closebtn" role="button" aria-label="close">
                                     <path fillRule="evenodd" clipRule="evenodd" d="M2.29297 3.70706L10.5859 12L2.29297 20.2928L3.70718 21.7071L12.0001 13.4142L20.293 21.7071L21.7072 20.2928L13.4143 12L21.7072 3.70706L20.293 2.29285L12.0001 10.5857L3.70718 2.29285L2.29297 3.70706Z" fill="currentColor">
