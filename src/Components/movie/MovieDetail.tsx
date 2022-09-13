@@ -6,6 +6,8 @@ import { makeImagePath } from '../../utils';
 import { motion, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import YouTube, { YouTubeProps } from 'react-youtube';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faVolumeOff, faVolumeXmark } from '@fortawesome/free-solid-svg-icons'
 
 const MovieDetailWrapper = styled(motion.div)``;
 
@@ -50,6 +52,22 @@ const CloseModal = styled.div`
     width: 36px;
     }
 `;
+
+const SoundButton = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    color: ${props => props.theme.white.lighter};
+    border-color: ${props => props.theme.white.lighter};
+    background-color: transparent;
+    border-radius: 50%;
+    font-size: 30px;
+    position: absolute;
+    right: 30px;
+    top: 40vh;
+`
 
 const InfoWrapper = styled.div`
     padding: 0 10px;
@@ -250,6 +268,12 @@ interface IDetailProps {
 
 const MovieDetail = ({ id, subject }: IDetailProps) => {
     const navigate = useNavigate();
+    const [mute, setMute] = useState(1);
+    const onSoundClick = () => {
+        setMute(() => {
+            return mute ? 0 : 1;
+        })
+    }
     const onOverlayClick = () => {
         if (subject === 'movie') {
             navigate(-1);
@@ -305,7 +329,7 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
             autohide: 1,
             loop: 1,
             rel: 0,
-            mute: 1,
+            mute: mute,
             modestbranding: 1,
             showinfo: 0,
         },
@@ -345,6 +369,7 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
                                     </FrameWrapper>
                                 )}
                             </BigCover>
+                            {ready && (<SoundButton onClick={onSoundClick}>{!mute ? <FontAwesomeIcon icon={faVolumeOff} /> : <FontAwesomeIcon icon={faVolumeXmark} />}</SoundButton>)}
                             <CloseModal onClick={onCloseModalClick}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-uia="previewModal-closebtn" role="button" aria-label="close">
                                     <path fillRule="evenodd" clipRule="evenodd" d="M2.29297 3.70706L10.5859 12L2.29297 20.2928L3.70718 21.7071L12.0001 13.4142L20.293 21.7071L21.7072 20.2928L13.4143 12L21.7072 3.70706L20.293 2.29285L12.0001 10.5857L3.70718 2.29285L2.29297 3.70706Z" fill="currentColor">

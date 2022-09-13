@@ -137,6 +137,10 @@ const Home = ({ authService }: IHomeProps) => {
         setTimeout(() => setReady(() => true), 5000);
     }
     useEffect(() => {
+        bigMovieMatch && setReady(() => false);
+    }, [bigMovieMatch]);
+
+    useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
     useEffect(() => {
