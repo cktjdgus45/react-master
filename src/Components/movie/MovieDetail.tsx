@@ -329,7 +329,7 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
             autohide: 1,
             loop: 1,
             rel: 0,
-            mute: mute,
+            mute,
             modestbranding: 1,
             showinfo: 0,
         },

@@ -115,12 +115,11 @@ const MovieInfo = styled(motion.div)`
 const Tv = () => {
     const navigate = useNavigate();
     const bigTvMatch = useMatch("/tvshows/:tvId/:subject");
-    const middleTvMatch = useMatch("/tvshows/:tvId/");
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
     const { data, isLoading } = useQuery<IGetContent>(['tvshows', 'top_rated'], () => getTvshows('top_rated'));
     const onDetailClick = (tvId: number) => {
         setReady(() => false);
-        navigate(`/tvshows/${tvId}`);
+        navigate(`/tvshows/${tvId}/tv`);
     }
     const [mute, setMute] = useState(1);
     const [ready, setReady] = useState(false);
@@ -132,6 +131,9 @@ const Tv = () => {
     const setReadyAfterFiveMinute = () => {
         setTimeout(() => setReady(() => true), 5000);
     }
+    useEffect(() => {
+        bigTvMatch && setReady(() => false);
+    }, [bigTvMatch]);
     useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
@@ -202,7 +204,6 @@ const Tv = () => {
                                     <Title>{data?.results[2].name}</Title>
                                     <Overview>{data?.results[2].overview}</Overview>
                                     {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
-
                                 </motion.div>
                             )}
                         </Banner>
@@ -217,10 +218,6 @@ const Tv = () => {
                         <AnimatePresence>
                             {bigTvMatch?.params.tvId && bigTvMatch.params.subject ?
                                 <TvDetail subject={bigTvMatch.params.subject} id={bigTvMatch.params.tvId}></TvDetail>
-                                : null
-                            }
-                            {middleTvMatch?.params.tvId ?
-                                <TvDetail id={middleTvMatch.params.tvId}></TvDetail>
                                 : null
                             }
                         </AnimatePresence>
