@@ -1,7 +1,7 @@
 
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getTvshows, IGetContent, IYouTubeResult, } from '../api';
+import { getTvshows, IContent, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -116,6 +116,7 @@ const Tv = () => {
     const navigate = useNavigate();
     const bigTvMatch = useMatch("/tvshows/:tvId/:subject");
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
+    const [tv, setTv] = useState<IContent>();
     const { data, isLoading } = useQuery<IGetContent>(['tvshows', 'top_rated'], () => getTvshows('top_rated'));
     const onDetailClick = (tvId: number) => {
         setReady(() => false);
@@ -141,7 +142,10 @@ const Tv = () => {
         if (!isLoading) {
             const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
             const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
-            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${data?.results[2].original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
+            const index = data?.results.findIndex(tv => tv.name === '아케인')! as number;
+            const tv = data?.results[index];
+            setTv(tv);
+            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${tv?.original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
                 .then((response) => response.json())
                 .then((response2) => setYoutubeVideo(response2))
         }
@@ -170,7 +174,6 @@ const Tv = () => {
         setTimeout(setTimeCallback, playingTime);
     }
     const onEnd = () => {
-        console.log('youtube end');
         setReady(() => false);
     }
     useEffect(() => {
@@ -181,7 +184,7 @@ const Tv = () => {
             {
                 isLoading ? <LoadingSpinner /> : (
                     <>
-                        <Banner bgphoto={makeImagePath(data?.results[2].backdrop_path || "")}>
+                        <Banner bgphoto={makeImagePath(tv?.backdrop_path || "")}>
                             {ready ? (
                                 <FrameWrapper>
                                     <FrameContainer>
@@ -195,15 +198,15 @@ const Tv = () => {
                                         />
                                     </FrameContainer>
                                     <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
-                                        <Title>{data?.results[2].name}</Title>
-                                        {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
+                                        <Title>{tv?.name}</Title>
+                                        {tv && <DetailButton onClick={() => onDetailClick(tv?.id)}>상세 정보</DetailButton>}
                                     </MovieInfo>
                                 </FrameWrapper>
                             ) : (
                                 <motion.div layoutId='test' style={{ width: '70%' }}>
-                                    <Title>{data?.results[2].name}</Title>
-                                    <Overview>{data?.results[2].overview}</Overview>
-                                    {data && <DetailButton onClick={() => onDetailClick(data?.results[2].id)}>상세 정보</DetailButton>}
+                                    <Title>{tv?.name}</Title>
+                                    <Overview>{tv?.overview}</Overview>
+                                    {tv && <DetailButton onClick={() => onDetailClick(tv?.id)}>상세 정보</DetailButton>}
                                 </motion.div>
                             )}
                         </Banner>
