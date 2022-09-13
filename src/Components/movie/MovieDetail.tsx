@@ -245,7 +245,7 @@ const FrameWrapper = styled.div`
 `
 interface IDetailProps {
     id: string;
-    subject?: string;
+    subject: string;
 }
 
 const MovieDetail = ({ id, subject }: IDetailProps) => {
@@ -320,7 +320,6 @@ const MovieDetail = ({ id, subject }: IDetailProps) => {
         setTimeout(setTimeCallback, playingTime);
     }
     const onEnd = () => {
-        console.log('youtube end');
         setReady(() => false);
     }
     return (

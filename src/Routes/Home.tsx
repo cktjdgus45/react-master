@@ -119,7 +119,6 @@ interface IHomeProps {
 const Home = ({ authService }: IHomeProps) => {
     const navigate = useNavigate();
     const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
-    const middleMovieMatch = useMatch<string, string>("/movies/:movieId/");
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
     const [mute, setMute] = useState(1);
     const [ready, setReady] = useState(false);
@@ -128,9 +127,11 @@ const Home = ({ authService }: IHomeProps) => {
             return mute ? 0 : 1;
         })
     }
+
     const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], async () => await getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
-        navigate(`/movies/${movieId}`);
+        setReady(() => false);
+        navigate(`/movies/${movieId}/movie`);
     }
     const setReadyAfterFiveMinute = () => {
         setTimeout(() => setReady(() => true), 5000);
@@ -177,7 +178,6 @@ const Home = ({ authService }: IHomeProps) => {
         setTimeout(setTimeCallback, playingTime);
     }
     const onEnd = () => {
-        console.log('youtube end');
         setReady(() => false);
     }
     useEffect(() => {
@@ -192,9 +192,6 @@ const Home = ({ authService }: IHomeProps) => {
                             {ready ? (
                                 <FrameWrapper>
                                     <FrameContainer>
-                                        {/* <iframe title="official-trailer" id="ytplayer" typeof='text/html' width="720" height="405"
-                                            src={`https://www.youtube.com/embed/${youtubeVideo?.items[0].id.videoId}?autoplay=1&controls=0&loop=1&playlist=${youtubeVideo?.items[0].id.videoId}&mute=${mute}&modestbranding=1&showinfo=0`}
-                                            frameBorder="0" allowFullScreen /> */}
                                         <YouTube
                                             videoId={youtubeVideo?.items[0].id.videoId}
                                             id="ytplayer"
@@ -228,10 +225,6 @@ const Home = ({ authService }: IHomeProps) => {
                         <AnimatePresence>
                             {bigMovieMatch?.params.movieId && bigMovieMatch.params.subject ?
                                 <MovieDetail subject={bigMovieMatch.params.subject} id={bigMovieMatch.params.movieId}></MovieDetail>
-                                : null
-                            }
-                            {middleMovieMatch?.params.movieId ?
-                                <MovieDetail id={middleMovieMatch.params.movieId}></MovieDetail>
                                 : null
                             }
                         </AnimatePresence>

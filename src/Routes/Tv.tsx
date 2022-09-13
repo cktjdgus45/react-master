@@ -119,6 +119,7 @@ const Tv = () => {
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
     const { data, isLoading } = useQuery<IGetContent>(['tvshows', 'top_rated'], () => getTvshows('top_rated'));
     const onDetailClick = (tvId: number) => {
+        setReady(() => false);
         navigate(`/tvshows/${tvId}`);
     }
     const [mute, setMute] = useState(1);
