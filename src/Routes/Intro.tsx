@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Banner = styled.section`
     width: 100vw;
-    height: 100vh;
+    height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,27 +18,57 @@ const Start = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media ${props => props.theme.device.laptop} {
+        text-align: center;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        text-align: center;
+    }
 `
 
 const BigTitle = styled.h1`
     font-size: 60px;
     font-weight: 700;
     text-align: center;
+    @media ${props => props.theme.device.laptop} {
+        font-size: 50px;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        font-size: 40px;
+}
 `
 const Title = styled.h1`
     font-size: 50px;
     font-weight: 700;
+    @media ${props => props.theme.device.laptop} {
+        font-size:40px;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        font-size:30px;
+}
 `
 const MiddleTitle = styled.h3`
     font-size: 25px;
     font-weight: 500;
     margin-bottom: 30px;
     margin-top: 30px;
+    @media ${props => props.theme.device.laptop} {
+        font-size : 22.5px;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        font-size : 20px;
+}
 `
 const SmallTitle = styled.h5`
     font-size: 20px;
     font-weight: 400;
     margin-bottom: 25px;
+    @media ${props => props.theme.device.laptop} {
+        font-size: 17.5px;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        font-size: 15px;
+}
 `
 
 const Form = styled.form`
@@ -49,6 +79,18 @@ const Form = styled.form`
         padding: 20px 5px;
         width: 70%;
         font-size: 17px;
+    }
+    @media ${props => props.theme.device.laptop} {
+        flex-direction: column;
+        input,button{
+            width: 100%;
+        }
+    }
+    @media ${props => props.theme.device.mobileS} {
+        flex-direction: column;
+        input,button{
+            width: 100%;
+        }
     }
     `
 const Button = styled.button`
@@ -64,12 +106,19 @@ const Button = styled.button`
     color: ${props => props.theme.white.lighter};
 `
 
-const Main = styled.section`
+const Section = styled.section`
     width: 100vw;
     height: 50vh;
     padding: 20px 40px;
+    background-color: #000000;
     border-bottom: 7px solid ${props => props.theme.black.lighter};
     border-top: 7px solid ${props => props.theme.black.lighter};
+    @media ${props => props.theme.device.laptop} {
+        height: auto;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        height: auto;
+    }
 `;
 const ContentWrapper = styled.div`
     width: 100%;
@@ -77,21 +126,52 @@ const ContentWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    @media ${props => props.theme.device.laptop} {
+        flex-direction: column;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        flex-direction: column;
+    }
 `;
 const Content = styled.div`
     width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    @media ${props => props.theme.device.laptop} {
+        width: 100%;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        width: 100%;
+    }
 `;
 
 const ContentBox = styled.div`
     width: 50%;
+    @media ${props => props.theme.device.laptop} {
+        
+    }
+    @media ${props => props.theme.device.mobileS} {
+        flex-direction: column;
+        text-align: center;
+        width: auto;
+    }
+    @media ${props => props.theme.device.laptopL} {
+        width: 80%;
+    }
 `;
 
 const ContentMedia = styled.div`
     width: 50%;
     height: 100%;
+    @media ${props => props.theme.device.laptop} {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    @media ${props => props.theme.device.mobileS} {
+        width: 100%;
+        margin-bottom: 30px;
+    }
 `;
 
 const ContentType = styled.div`
@@ -131,7 +211,7 @@ const Intro = () => {
                     </Form>
                 </Start>
             </Banner>
-            <Main>
+            <Section>
                 <ContentWrapper>
                     <Content>
                         <ContentBox>
@@ -145,8 +225,8 @@ const Intro = () => {
                         </ContentType>
                     </ContentMedia>
                 </ContentWrapper>
-            </Main>
-            <Main>
+            </Section>
+            <Section>
                 <ContentWrapper>
                     <ContentMedia>
                         <ContentType>
@@ -160,8 +240,8 @@ const Intro = () => {
                         </ContentBox>
                     </Content>
                 </ContentWrapper>
-            </Main>
-            <Main>
+            </Section>
+            <Section>
                 <ContentWrapper>
                     <Content>
                         <ContentBox>
@@ -175,8 +255,8 @@ const Intro = () => {
                         </ContentType>
                     </ContentMedia>
                 </ContentWrapper>
-            </Main>
-            <Main>
+            </Section>
+            <Section>
                 <ContentWrapper>
                     <ContentMedia>
                         <ContentType>
@@ -190,7 +270,7 @@ const Intro = () => {
                         </ContentBox>
                     </Content>
                 </ContentWrapper>
-            </Main>
+            </Section>
         </>
     )
 }
