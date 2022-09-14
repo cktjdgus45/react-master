@@ -149,7 +149,7 @@ const Content = styled.div`
 const ContentBox = styled.div`
     width: 50%;
     @media ${props => props.theme.device.laptop} {
-        
+        text-align: center;
     }
     @media ${props => props.theme.device.mobileS} {
         flex-direction: column;
@@ -158,6 +158,7 @@ const ContentBox = styled.div`
     }
     @media ${props => props.theme.device.laptopL} {
         width: 80%;
+        text-align: center;
     }
 `;
 
