@@ -40,6 +40,11 @@ const Input = styled.input`
     &::placeholder{
         font-size: 20px;
     }
+    @media ${props => props.theme.device.mobileL} {
+        &::placeholder{
+        font-size: 13px;
+    }
+    }
 `;
 
 const LoginButton = styled.button`
@@ -48,6 +53,9 @@ const LoginButton = styled.button`
     background-color: ${props => props.theme.red};
     font-size: 17px;
     font-weight: 600;
+    @media ${props => props.theme.device.mobileL} {
+        padding:15px 65px
+    }
 `;
 
 const SocialButton = styled.button`
@@ -85,6 +93,14 @@ const JoinModal = styled.div`
         &:hover{
             border-bottom: 1px solid  ${props => props.theme.white.lighter};
         }
+    }
+    @media ${props => props.theme.device.mobileS} {
+        flex-direction: column;
+        text-align: center;
+    }
+    @media ${props => props.theme.device.mobileL} {
+        flex-direction: column;
+        text-align: center;
     }
 `
 
