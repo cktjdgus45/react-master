@@ -18,6 +18,8 @@ const Row = styled(motion.div)`
     grid-template-columns: repeat(7,1fr);
     margin-bottom:5px;
     width: 107.5%;
+    @media ${props => props.theme.device.tablet} {
+    }
 `;
 
 const Box = styled(motion.div) <{ bgphoto: string }>`

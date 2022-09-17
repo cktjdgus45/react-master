@@ -20,10 +20,15 @@ const Banner = styled.div<{ bgphoto: string }>`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width:100%;
     height:100vh;
     padding: 60px;
     background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)),url(${(props) => props.bgphoto});
     background-size: cover;
+    background-position: center center;
+    @media ${props => props.theme.device.tablet} {
+        padding: 0px;
+    }
 `
 
 const Title = styled.h2`
@@ -35,6 +40,9 @@ const Overview = styled.p`
     font-size: 16px;
     line-height: 1.5rem;
     margin-bottom: 20px;
+    @media ${props => props.theme.device.tablet}{
+        width: 100%;
+    }
     `
 
 const DetailButton = styled.button`
@@ -62,6 +70,9 @@ const BannerSlider = styled.div`
     width: 100%;
     height: auto;
     display: block;
+    @media ${props => props.theme.device.tablet} {
+        position: static;
+    }
 `;
 
 const Devider = styled.div`
@@ -215,7 +226,7 @@ const Home = ({ authService }: IHomeProps) => {
                                     </MovieInfo>
                                 </FrameWrapper>
                             ) : (
-                                <motion.div layoutId='test' style={{ width: '70%' }}>
+                                <motion.div layoutId='test' style={{ width: '100vw' }}>
                                     <Title>{movie?.title}</Title>
                                     <Overview>{movie?.overview}</Overview>
                                     {movie && <DetailButton onClick={() => onDetailClick(movie?.id)}>상세 정보</DetailButton>}
