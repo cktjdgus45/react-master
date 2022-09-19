@@ -30,10 +30,23 @@ const Banner = styled.div<{ bgphoto: string }>`
         padding: 0px;
     }
 `
+const MovieInfo = styled(motion.div)`
+    position: absolute;
+    left: 25px;
+    top: 350px;
+    width: 40%;
+    height: 200px;
+    @media ${props => props.theme.device.mobileL} {
+        position: static;
+    }
+`
 
 const Title = styled.h2`
     font-size:58px;
     margin-bottom: 43px;
+    @media ${props => props.theme.device.mobileL} {
+        font-size:25px;
+    }
 `
 const Overview = styled.p`
     width: 40%;
@@ -81,7 +94,7 @@ const Devider = styled.div`
     display: block;
 `
 const FrameContainer = styled.div`
-    position: absolute;
+    position: relative;
     padding-bottom: 39.25%;
     padding-top: 10%;
     width: 300%;
@@ -97,7 +110,7 @@ const FrameContainer = styled.div`
 `
 
 const FrameWrapper = styled.div`
-    overflow: hidden;
+    /* overflow: hidden; */
     max-width: 100%;
 `
 const SoundButton = styled.button`
@@ -114,13 +127,6 @@ const SoundButton = styled.button`
     position: absolute;
     right: 30px;
     top: 75vh;
-`
-const MovieInfo = styled(motion.div)`
-    position: absolute;
-    left: 25px;
-    top: 350px;
-    width: 40%;
-    height: 200px;
 `
 
 interface IHomeProps {
