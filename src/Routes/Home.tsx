@@ -110,7 +110,6 @@ const FrameContainer = styled.div`
 `
 
 const FrameWrapper = styled.div`
-    /* overflow: hidden; */
     max-width: 100%;
 `
 const SoundButton = styled.button`

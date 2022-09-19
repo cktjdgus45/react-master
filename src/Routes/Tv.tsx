@@ -24,17 +24,26 @@ const Banner = styled.div<{ bgphoto: string }>`
     padding: 60px;
     background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)),url(${(props) => props.bgphoto});
     background-size: cover;
+    @media ${props => props.theme.device.tablet} {
+        padding: 0px;
+    }
 `
 
 const Title = styled.h2`
     font-size:58px;
     margin-bottom: 43px;
+    @media ${props => props.theme.device.mobileL} {
+        font-size:25px;
+    }
 `
 const Overview = styled.p`
     width: 40%;
     font-size: 16px;
     line-height: 1.5rem;
     margin-bottom: 20px;
+    @media ${props => props.theme.device.tablet}{
+        width: 100%;
+    }
     `
 
 const DetailButton = styled.button`
@@ -62,6 +71,9 @@ const BannerSlider = styled.div`
     width: 100%;
     height: auto;
     display: block;
+    @media ${props => props.theme.device.tablet} {
+        position: static;
+    }
 `;
 
 const Devider = styled.div`
@@ -70,7 +82,7 @@ const Devider = styled.div`
     display: block;
 `
 const FrameContainer = styled.div`
-    position: absolute;
+    position: relative;
     padding-bottom: 39.25%;
     padding-top: 10%;
     width: 300%;
@@ -86,7 +98,6 @@ const FrameContainer = styled.div`
 `
 
 const FrameWrapper = styled.div`
-    overflow: hidden;
     max-width: 100%;
 `
 const SoundButton = styled.button`
@@ -104,12 +115,15 @@ const SoundButton = styled.button`
     right: 30px;
     top: 75vh;
 `
-const MovieInfo = styled(motion.div)`
+const TvInfo = styled(motion.div)`
     position: absolute;
     left: 25px;
     top: 350px;
     width: 40%;
     height: 200px;
+    @media ${props => props.theme.device.mobileL} {
+        position: static;
+    }
 `
 
 const Tv = () => {
@@ -197,10 +211,10 @@ const Tv = () => {
                                             onEnd={onEnd}
                                         />
                                     </FrameContainer>
-                                    <MovieInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
+                                    <TvInfo layoutId='test' transition={{ type: 'tween', ease: 'linear', duration: 1 }}>
                                         <Title>{tv?.name}</Title>
                                         {tv && <DetailButton onClick={() => onDetailClick(tv?.id)}>상세 정보</DetailButton>}
-                                    </MovieInfo>
+                                    </TvInfo>
                                 </FrameWrapper>
                             ) : (
                                 <motion.div layoutId='test' style={{ width: '70%' }}>

@@ -21,9 +21,9 @@ const Overlay = styled(motion.div)`
     overflow-y: auto;
 `;
 
-const BigMovie = styled(motion.div)`
+const BigTv = styled(motion.div)`
     position: absolute;
-    width: 45vw;
+    width: 60vw;
     overflow-y: scroll;
     height: 100vh;
     left: 0;
@@ -35,6 +35,12 @@ const BigMovie = styled(motion.div)`
     display: none;
 }
   -ms-overflow-style: none; 
+  @media ${props => props.theme.device.laptop} {
+    width: 85vw;
+  }
+  @media ${props => props.theme.device.mobileL} {
+    width: 95vw;
+  }
 `;
 
 const CloseModal = styled.div`
@@ -348,7 +354,7 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
     return (
         <MovieDetailWrapper transition={{ type: 'tween' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Overlay onClick={onOverlayClick} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Overlay>
-            <BigMovie layoutId={id + `${subject}`} style={{ top: scrollY.get() + 80 }}>
+            <BigTv layoutId={id + `${subject}`} style={{ top: scrollY.get() + 80 }}>
                 {
                     data && (
                         <>
@@ -451,7 +457,7 @@ const TvDetail = ({ id, subject }: IDetailProps) => {
                         </>
                     )
                 }
-            </BigMovie>
+            </BigTv>
         </MovieDetailWrapper>
     )
 }
