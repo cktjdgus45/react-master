@@ -23,7 +23,7 @@ const Overlay = styled(motion.div)`
 
 const BigMovie = styled(motion.div)`
     position: absolute;
-    width: 45vw;
+    width: 60vw;
     overflow-y: scroll;
     height: 100vh;
     left: 0;
@@ -35,6 +35,12 @@ const BigMovie = styled(motion.div)`
     display: none;
 }
   -ms-overflow-style: none; 
+  @media ${props => props.theme.device.laptop} {
+    width: 85vw;
+  }
+  @media ${props => props.theme.device.mobileL} {
+    width: 95vw;
+  }
 `;
 
 const CloseModal = styled.div`
