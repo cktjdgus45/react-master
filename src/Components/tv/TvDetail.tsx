@@ -247,7 +247,7 @@ const SmallTitle = styled.h3`
 `
 
 const FrameContainer = styled.div`
-    position: absolute;
+    position: relative;
     padding-bottom: 39.25%;
     padding-top: 37%;
     width: 300%;
@@ -259,6 +259,17 @@ const FrameContainer = styled.div`
     left: 0; 
     width: 100%; 
     height: 100%;
+    }
+    @media ${props => props.theme.device.laptopL} {
+        padding-bottom: 69.25%;
+    }
+    @media ${props => props.theme.device.tablet} {
+        padding-top: 60%;
+        padding-bottom: 75%;
+    }
+    @media ${props => props.theme.device.mobileL} {
+        padding-top: 100%;
+        padding-bottom: 100%;
     }
 `
 const FrameWrapper = styled.div`
