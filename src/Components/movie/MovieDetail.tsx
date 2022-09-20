@@ -267,7 +267,7 @@ const FrameContainer = styled.div`
     }
     @media ${props => props.theme.device.tablet} {
         padding-top: 60%;
-        padding-bottom: 75%;
+        padding-bottom: 135%;
     }
     @media ${props => props.theme.device.mobileL} {
         padding-top: 100%;

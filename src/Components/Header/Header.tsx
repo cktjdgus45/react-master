@@ -45,6 +45,55 @@ const Items = styled.ul`
     align-items: center;
 `;
 
+const Menu = styled.li`
+    position: relative;
+    align-items: center;
+    display: none;
+    font-weight: 700;
+    height: 100%;
+    &::after{
+        border-color: #fff transparent transparent;
+        border-style: solid;
+        border-width: 5px 5px 0;
+        content: "";
+        height: 0;
+        margin-left: 5px;
+        width: 0;
+    }
+    @media ${props => props.theme.device.mobileL} {
+        display: flex;
+    }
+`;
+
+const MenuItemWrapper = styled.div<{ opacity: string }>`
+    position: absolute;
+    left: -90px;
+    top: 20px;
+    opacity: ${props => props.opacity};
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    transition-duration: 150ms;
+    background-color: ${props => props.theme.black.veryDark};
+`;
+
+const MenuItem = styled.li`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 100px;
+    color: ${(props) => props.theme.white.darker};
+    a{
+        width: 50px;
+        display: flex;
+        justify-content: center;
+    }
+    &:hover{
+        background: hsla(0,0%,100%,.2);
+    }
+`;
 const Item = styled.li`
     position: relative;
     display: flex;
@@ -53,6 +102,9 @@ const Item = styled.li`
     transition: color 0.3s ease-in-out;
   &:hover {
     color: ${(props) => props.theme.white.lighter};
+  }
+  @media ${props => props.theme.device.mobileL} {
+    display: none;
   }
 `;
 
@@ -64,6 +116,9 @@ const Search = styled.form`
     cursor: pointer;
     svg {
       height: 25px;
+    }
+    @media ${props => props.theme.device.mobileL} {
+        display: none;
     }
 `;
 
@@ -132,6 +187,7 @@ const Header = ({ authService }: IHeaderProps) => {
     const navAnimation = useAnimationControls();
     const [searchOpen, setSearchOpen] = useState(false);
     const [isLogined, setIsLogined] = useState<User | null>();
+    const [isHovered, setHovered] = useState<Boolean>(false);
     const homeMatch = useMatch('/');
     const tvMatch = useMatch('tv');
     const introMatch = useMatch('react-master');
@@ -167,6 +223,23 @@ const Header = ({ authService }: IHeaderProps) => {
                 </Link>
                 {!introMatch && isLogined ? (
                     <Items>
+                        <Menu onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+                            메뉴
+                            {isHovered && (
+                                <MenuItemWrapper onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} opacity={isHovered ? '1' : '0'}>
+                                    <MenuItem>
+                                        <Link to='.'>
+                                            홈
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem >
+                                        <Link to='tv'>
+                                            시리즈
+                                        </Link>
+                                    </MenuItem>
+                                </MenuItemWrapper>
+                            )}
+                        </Menu>
                         <Item>
                             <Link to='.'>
                                 홈 {homeMatch && <Circle layoutId='circle' />}
