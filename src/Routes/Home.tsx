@@ -47,6 +47,9 @@ const Title = styled.h2`
     @media ${props => props.theme.device.mobileL} {
         font-size:25px;
     }
+    @media ${props => props.theme.device.tablet} {
+        font-size:30px;
+    }
 `
 const Overview = styled.p`
     width: 40%;
@@ -55,6 +58,7 @@ const Overview = styled.p`
     margin-bottom: 20px;
     @media ${props => props.theme.device.tablet}{
         width: 100%;
+        font-size: 16px;
     }
     `
 
@@ -74,6 +78,10 @@ const DetailButton = styled.button`
     font-size: 20px;
     &:hover{
         background-color: ${props => props.theme.black.darker};
+    }
+    @media ${props => props.theme.device.tablet} {
+        padding: 10px 20px;
+        width: 130px;
     }
 `
 
