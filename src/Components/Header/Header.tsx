@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useMatch, useNavigate } from 'react-router-dom';
 import { useScroll, useAnimationControls } from "framer-motion";
 import { useForm } from 'react-hook-form';
@@ -117,7 +117,7 @@ const Search = styled.form`
     svg {
       height: 25px;
     }
-    @media ${props => props.theme.device.mobileL} {
+    @media ${props => props.theme.device.tablet} {
         display: none;
     }
 `;
@@ -129,8 +129,8 @@ const Circle = styled(motion.span)`
     border-radius: 2.5px;
     right: 0;
     left: 0;
-    bottom: -5px;
     margin: 0 auto;
+    bottom:-5px;
     background-color: ${props => props.theme.red};
 `
 
@@ -146,18 +146,42 @@ const Input = styled(motion.input)`
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.white.lighter};
 `
+const ProfileWrapper = styled.div <{ opacity: string }>`
+    position: absolute;
+    right: 0px;
+    top: 30px;
+    opacity: ${props => props.opacity};
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    transition-duration: 150ms;
+    background-color: ${props => props.theme.black.veryDark};
+`;
 
-const AuthButton = styled.button`
-    border-radius: 3px;
-    text-align: center;
-    padding: 5px 10px;
-    margin-left: 15px;
-    border: none;
-    background-color: ${props => props.theme.red};
+const UserName = styled.h3`
     font-size: 16px;
+    font-weight: 500;
+    padding: 5px 10px;
+    text-align: center;
     color: ${props => props.theme.white.lighter};
+    &:hover{
+        background: hsla(0,0%,100%,.2);
+    }
+`;
+
+const AuthButton = styled.h3`
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 10px;
+    text-align: center;
+    color: ${props => props.theme.white.lighter};
+    &:hover{
+        background: hsla(0,0%,100%,.2);
+    }
 `
 const Profile = styled.div<{ bgPhoto: string }>`
+    position: relative;
     width: 30px;
     height: 30px;
     border-radius: 1px;
@@ -165,12 +189,18 @@ const Profile = styled.div<{ bgPhoto: string }>`
     background-position: center;
     background-size: cover;
     margin-left: 15px;
-
-`;
-const UserName = styled.h3`
-    margin-left: 5px;
-    font-size: 16px;
-    font-weight: 500;
+    &::after{
+        position: absolute;
+        right: -15px;
+        top: 15px;
+        border-color: #fff transparent transparent;
+        border-style: solid;
+        border-width: 5px 5px 0;
+        content: "";
+        height: 0;
+        margin-left: 5px;
+        width: 0;
+    }
 `;
 
 interface IHeaderProps {
@@ -187,7 +217,8 @@ const Header = ({ authService }: IHeaderProps) => {
     const navAnimation = useAnimationControls();
     const [searchOpen, setSearchOpen] = useState(false);
     const [isLogined, setIsLogined] = useState<User | null>();
-    const [isHovered, setHovered] = useState<Boolean>(false);
+    const [isMenuHovered, setMenuHovered] = useState<Boolean>(false);
+    const [isProfileHovered, setProfileHovered] = useState<Boolean>(false);
     const homeMatch = useMatch('/');
     const tvMatch = useMatch('tv');
     const introMatch = useMatch('react-master');
@@ -223,10 +254,10 @@ const Header = ({ authService }: IHeaderProps) => {
                 </Link>
                 {!introMatch && isLogined ? (
                     <Items>
-                        <Menu onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+                        <Menu onMouseEnter={() => setMenuHovered(true)} onMouseLeave={() => setMenuHovered(false)}>
                             메뉴
-                            {isHovered && (
-                                <MenuItemWrapper onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} opacity={isHovered ? '1' : '0'}>
+                            {isMenuHovered && (
+                                <MenuItemWrapper onMouseEnter={() => setMenuHovered(true)} onMouseLeave={() => setMenuHovered(false)} opacity={isMenuHovered ? '1' : '0'}>
                                     <MenuItem>
                                         <Link to='.'>
                                             홈
@@ -274,9 +305,14 @@ const Header = ({ authService }: IHeaderProps) => {
                             <Input {...register('keyword', { required: true, minLength: 2 })} animate={{ scaleX: searchOpen ? 1 : 0 }} transition={{ type: 'linear' }} placeholder='제목,사람,장르' />
                         </Search>
                     )}
-                    <Profile bgPhoto={isLogined.photoURL ? isLogined.photoURL : 'https://occ-0-988-993.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABRFZFS8db1R43jhQH8qYonvQ7XOdqfn1JEgczxD7Uz5vCGx-vnN18_sI8xORbinwQJzWgucNziIuHH8mhFA1iR7CGB8A4ms.png?r=eea'}></Profile>
-                    <UserName>{isLogined.displayName ? isLogined.displayName : isLogined.email}</UserName>
-                    <AuthButton onClick={onLogOut}>로그아웃</AuthButton>
+                    <Profile onMouseEnter={() => setProfileHovered(true)} onMouseLeave={() => setProfileHovered(false)} bgPhoto={isLogined.photoURL ? isLogined.photoURL : 'https://occ-0-988-993.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABRFZFS8db1R43jhQH8qYonvQ7XOdqfn1JEgczxD7Uz5vCGx-vnN18_sI8xORbinwQJzWgucNziIuHH8mhFA1iR7CGB8A4ms.png?r=eea'}>
+                        {isProfileHovered && (
+                            <ProfileWrapper onMouseEnter={() => setProfileHovered(true)} onMouseLeave={() => setProfileHovered(false)} opacity={isProfileHovered ? '1' : '0'}>
+                                <UserName>{isLogined.displayName ? isLogined.displayName : isLogined.email}</UserName>
+                                <AuthButton onClick={onLogOut}>넷플릭스에서 로그아웃</AuthButton>
+                            </ProfileWrapper>
+                        )}
+                    </Profile>
                 </Col>
             ) : (
                 <AuthButton onClick={goToLogin}>
