@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeOff, faVolumeXmark } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getMovies, IContent, IGetContent, IYouTubeResult, } from '../api';
+import { getMovies, getSearchYoutube, IContent, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -170,14 +170,13 @@ const Home = ({ authService }: IHomeProps) => {
 
     useEffect(() => {
         if (!isLoading) {
-            const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
-            const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
             const index = data?.results.findIndex(movie => movie.title === '기생충')! as number;
             const movie = data?.results[index];
             setMovie(movie);
-            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${movie?.original_title}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
-                .then((response) => response.json())
-                .then((json) => setYoutubeVideo(json))
+            movie &&
+                getSearchYoutube(movie.original_title)
+                    ?.then(response => response.json())
+                    .then(json => setYoutubeVideo(json))
         }
     }, [data?.results, isLoading])
 

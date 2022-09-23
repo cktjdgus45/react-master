@@ -160,10 +160,6 @@ export function getSearchMedia(keyword: string) {
 }
 
 //youtube
-
-const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
-const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
-
 interface IYoutubeId {
     id: {
         videoId: string;
@@ -177,11 +173,14 @@ export interface IYouTubeResult {
     regionCode: string;
     pageInfo: {};
     items: IYoutubeId[];
-}
 
+}
 export function getSearchYoutube(query: string) {
+    const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
+    const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
     if (!query) return;
-    return fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${query}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`).then(
-        (response) => response.json()
+    return fetch(
+        `${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${query}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`
     )
+
 }

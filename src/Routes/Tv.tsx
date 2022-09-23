@@ -1,7 +1,7 @@
 
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getTvshows, IContent, IGetContent, IYouTubeResult, } from '../api';
+import { getSearchYoutube, getTvshows, IContent, IGetContent, IYouTubeResult, } from '../api';
 import { makeImagePath } from '../utils';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -135,16 +135,19 @@ const TvInfo = styled(motion.div)`
 
 const Tv = () => {
     const navigate = useNavigate();
-    const bigTvMatch = useMatch("/tvshows/:tvId/:subject");
-    const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
+    const useTvMatch = useMatch("/tvshows/:tvId/:subject");
+    const [mute, setMute] = useState(1);
+    const [ready, setReady] = useState(false);
     const [tv, setTv] = useState<IContent>();
+    const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
+
     const { data, isLoading } = useQuery<IGetContent>(['tvshows', 'top_rated'], () => getTvshows('top_rated'));
+
     const onDetailClick = (tvId: number) => {
         setReady(() => false);
         navigate(`/tvshows/${tvId}/tv`);
     }
-    const [mute, setMute] = useState(1);
-    const [ready, setReady] = useState(false);
+
     const onSoundClick = () => {
         setMute(() => {
             return mute ? 0 : 1;
@@ -154,21 +157,21 @@ const Tv = () => {
         setTimeout(() => setReady(() => true), 5000);
     }
     useEffect(() => {
-        bigTvMatch && setReady(() => false);
-    }, [bigTvMatch]);
+        useTvMatch && setReady(() => false);
+    }, [useTvMatch]);
+
     useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
     useEffect(() => {
         if (!isLoading) {
-            const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
-            const YT_API_KEY = "AIzaSyAPn-gok6TUy-KeBkXMaOVGFOXuWFwl_HE";
             const index = data?.results.findIndex(tv => tv.name === '아케인')! as number;
             const tv = data?.results[index];
             setTv(tv);
-            fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${tv?.original_name}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
-                .then((response) => response.json())
-                .then((response2) => setYoutubeVideo(response2))
+            tv &&
+                getSearchYoutube(tv.original_name)
+                    ?.then(response => response.json())
+                    .then(json => setYoutubeVideo(json));
         }
     }, [data?.results, isLoading])
 
@@ -240,8 +243,8 @@ const Tv = () => {
                         <TvSlider subject='popular'></TvSlider>
                         <TvSlider subject='top_rated'></TvSlider>
                         <AnimatePresence>
-                            {bigTvMatch?.params.tvId && bigTvMatch.params.subject ?
-                                <TvDetail subject={bigTvMatch.params.subject} id={bigTvMatch.params.tvId}></TvDetail>
+                            {useTvMatch?.params.tvId && useTvMatch.params.subject ?
+                                <TvDetail subject={useTvMatch.params.subject} id={useTvMatch.params.tvId}></TvDetail>
                                 : null
                             }
                         </AnimatePresence>
