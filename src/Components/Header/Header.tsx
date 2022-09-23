@@ -180,9 +180,9 @@ const AuthButton = styled.h3`
 `
 const Profile = styled.div<{ bgPhoto: string }>`
     position: relative;
-    width: 30px;
-    height: 30px;
-    border-radius: 1px;
+    width: 35px;
+    height: 35px;
+    border-radius: 7px;
     background-image: url(${props => props.bgPhoto});
     background-position: center;
     background-size: cover;
