@@ -142,7 +142,7 @@ interface IHomeProps {
 
 const Home = ({ authService }: IHomeProps) => {
     const navigate = useNavigate();
-    const bigMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
+    const useMovieMatch = useMatch<string, string>("/movies/:movieId/:subject");
     const [youtubeVideo, setYoutubeVideo] = useState<IYouTubeResult>();
     const [mute, setMute] = useState(1);
     const [movie, setMovie] = useState<IContent>();
@@ -152,7 +152,6 @@ const Home = ({ authService }: IHomeProps) => {
             return mute ? 0 : 1;
         })
     }
-
     const { data, isLoading } = useQuery<IGetContent>(['movies', 'top_rated'], async () => await getMovies('top_rated'));
     const onDetailClick = (movieId: number) => {
         setReady(() => false);
@@ -162,12 +161,13 @@ const Home = ({ authService }: IHomeProps) => {
         setTimeout(() => setReady(() => true), 5000);
     }
     useEffect(() => {
-        bigMovieMatch && setReady(() => false);
-    }, [bigMovieMatch]);
+        useMovieMatch && setReady(() => false);
+    }, [useMovieMatch]);
 
     useEffect(() => {
         document.body.style.overflowY = "scroll";
     });
+
     useEffect(() => {
         if (!isLoading) {
             const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
@@ -177,9 +177,10 @@ const Home = ({ authService }: IHomeProps) => {
             setMovie(movie);
             fetch(`${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${movie?.original_title}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`)
                 .then((response) => response.json())
-                .then((response2) => setYoutubeVideo(response2))
+                .then((json) => setYoutubeVideo(json))
         }
     }, [data?.results, isLoading])
+
     useEffect(() => {
         authService.onAuthChange(user => {
             if (!user) {
@@ -187,6 +188,7 @@ const Home = ({ authService }: IHomeProps) => {
             }
         })
     })
+
     const opts = {
         height: '720',
         width: '405',
@@ -255,8 +257,8 @@ const Home = ({ authService }: IHomeProps) => {
                         <MovieSlider subject='top_rated'></MovieSlider>
                         <MovieSlider subject='upcoming'></MovieSlider>
                         <AnimatePresence>
-                            {bigMovieMatch?.params.movieId && bigMovieMatch.params.subject ?
-                                <MovieDetail subject={bigMovieMatch.params.subject} id={bigMovieMatch.params.movieId}></MovieDetail>
+                            {useMovieMatch?.params.movieId && useMovieMatch.params.subject ?
+                                <MovieDetail subject={useMovieMatch.params.subject} id={useMovieMatch.params.movieId}></MovieDetail>
                                 : null
                             }
                         </AnimatePresence>
