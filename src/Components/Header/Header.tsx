@@ -65,11 +65,10 @@ const Menu = styled.li`
     }
 `;
 
-const MenuItemWrapper = styled.div<{ opacity: string }>`
+const MenuItemWrapper = styled(motion.div)`
     position: absolute;
     left: -90px;
     top: 20px;
-    opacity: ${props => props.opacity};
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -146,11 +145,10 @@ const Input = styled(motion.input)`
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.white.lighter};
 `
-const ProfileWrapper = styled.div <{ opacity: string }>`
+const ProfileWrapper = styled(motion.div)`
     position: absolute;
     right: 0px;
     top: 30px;
-    opacity: ${props => props.opacity};
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -207,6 +205,12 @@ interface IHeaderProps {
     authService: AuthService
 }
 
+const opacityVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+}
+
 const Header = ({ authService }: IHeaderProps) => {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IForm>();
@@ -256,20 +260,22 @@ const Header = ({ authService }: IHeaderProps) => {
                     <Items>
                         <Menu onMouseEnter={() => setMenuHovered(true)} onMouseLeave={() => setMenuHovered(false)}>
                             메뉴
-                            {isMenuHovered && (
-                                <MenuItemWrapper onMouseEnter={() => setMenuHovered(true)} onMouseLeave={() => setMenuHovered(false)} opacity={isMenuHovered ? '1' : '0'}>
-                                    <MenuItem>
-                                        <Link to='.'>
-                                            홈
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem >
-                                        <Link to='tv'>
-                                            시리즈
-                                        </Link>
-                                    </MenuItem>
-                                </MenuItemWrapper>
-                            )}
+                            <AnimatePresence>
+                                {isMenuHovered && (
+                                    <MenuItemWrapper variants={opacityVariants} exit="exit" animate="animate" initial="initial" onMouseEnter={() => setMenuHovered(true)} onMouseLeave={() => setMenuHovered(false)}>
+                                        <MenuItem>
+                                            <Link to='.'>
+                                                홈
+                                            </Link>
+                                        </MenuItem>
+                                        <MenuItem >
+                                            <Link to='tv'>
+                                                시리즈
+                                            </Link>
+                                        </MenuItem>
+                                    </MenuItemWrapper>
+                                )}
+                            </AnimatePresence>
                         </Menu>
                         <Item>
                             <Link to='.'>
@@ -306,12 +312,14 @@ const Header = ({ authService }: IHeaderProps) => {
                         </Search>
                     )}
                     <Profile onMouseEnter={() => setProfileHovered(true)} onMouseLeave={() => setProfileHovered(false)} bgPhoto={isLogined.photoURL ? isLogined.photoURL : 'https://occ-0-988-993.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABRFZFS8db1R43jhQH8qYonvQ7XOdqfn1JEgczxD7Uz5vCGx-vnN18_sI8xORbinwQJzWgucNziIuHH8mhFA1iR7CGB8A4ms.png?r=eea'}>
-                        {isProfileHovered && (
-                            <ProfileWrapper onMouseEnter={() => setProfileHovered(true)} onMouseLeave={() => setProfileHovered(false)} opacity={isProfileHovered ? '1' : '0'}>
-                                <UserName>{isLogined.displayName ? isLogined.displayName : isLogined.email}</UserName>
-                                <AuthButton onClick={onLogOut}>넷플릭스에서 로그아웃</AuthButton>
-                            </ProfileWrapper>
-                        )}
+                        <AnimatePresence>
+                            {isProfileHovered && (
+                                <ProfileWrapper variants={opacityVariants} exit="exit" animate="animate" initial="initial" onMouseEnter={() => setProfileHovered(true)} onMouseLeave={() => setProfileHovered(false)}>
+                                    <UserName>{isLogined.displayName ? isLogined.displayName : isLogined.email}</UserName>
+                                    <AuthButton onClick={onLogOut}>넷플릭스에서 로그아웃</AuthButton>
+                                </ProfileWrapper>
+                            )}
+                        </AnimatePresence>
                     </Profile>
                 </Col>
             ) : (
