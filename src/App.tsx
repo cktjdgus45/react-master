@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Header from './Components/Header/Header';
 import AuthService from './firebase/auth_service';
 import Home from './Routes/Home';
+import Media from './Routes/Media';
 import Intro from './Routes/Intro';
 import Join from './Routes/Join';
 import Login from './Routes/Login';

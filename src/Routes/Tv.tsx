@@ -239,8 +239,8 @@ const Tv = () => {
                             <TvSlider subject='on_the_air'></TvSlider>
                         </BannerSlider>
                         <Devider></Devider>
-                        <TvSlider subject='airing_today'></TvSlider>
                         <TvSlider subject='popular'></TvSlider>
+                        <TvSlider subject='airing_today'></TvSlider>
                         <TvSlider subject='top_rated'></TvSlider>
                         <AnimatePresence>
                             {useTvMatch?.params.tvId && useTvMatch.params.subject ?
