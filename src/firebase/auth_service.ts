@@ -3,8 +3,10 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, creat
 
 const fireBaseApp = app;
 
+export type SocialName = 'Google' | 'Github';
+
 class AuthService {
-    login(socialName: string) {
+    login(socialName: SocialName) {
         let provider;
         const auth = getAuth();
         if (socialName === 'Google') provider = new GoogleAuthProvider();

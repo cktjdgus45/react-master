@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import AuthService from '../firebase/auth_service';
+import AuthService, { SocialName } from '../firebase/auth_service';
 
 
 const LoginWrapper = styled.section`
@@ -146,7 +146,7 @@ const Login = ({ authService }: ILoginProps) => {
     const onSubmit = (data: IFormData) => {
         authService.emailLogin(data.email, data.password).then(data => goToHome(data.user));
     }
-    const onClick = (socialName: string) => {
+    const onClick = (socialName: SocialName) => {
         authService.login(socialName)?.then(data => goToHome(data.user));
     }
 
