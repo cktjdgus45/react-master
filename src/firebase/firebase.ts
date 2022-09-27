@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDRKbi4J3-C0esLLgkuJzTj7JWzClIQbR8",
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
   authDomain: "netflix-react-fd21a.firebaseapp.com",
   projectId: "netflix-react-fd21a",
   storageBucket: "netflix-react-fd21a.appspot.com",

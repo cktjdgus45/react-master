@@ -1,4 +1,4 @@
-const API_KEY = "36eac08768828f2c4e7cd1f7365d208d";
+const API_KEY = process.env.REACT_APP_MOVIEDB_APIKEY;
 const BASE_PATH = "https://api.themoviedb.org/3";
 
 interface Genre {
@@ -177,7 +177,7 @@ export interface IYouTubeResult {
 }
 export function getSearchYoutube(query: string) {
     const YT_BASE_PATH = "https://www.googleapis.com/youtube/v3";
-    const YT_API_KEY = "AIzaSyC6HBrHhpuY7pFjW1uMYZ1u5AjG-DxTk-c";
+    const YT_API_KEY = process.env.REACT_APP_YOUTUBE_APIKEY;
     if (!query) return;
     return fetch(
         `${YT_BASE_PATH}/search?part=snippet&maxResults=1&q=${query}-official trailer&type=video&videoDuration=short&key=${YT_API_KEY}`

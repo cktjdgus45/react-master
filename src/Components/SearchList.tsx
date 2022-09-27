@@ -29,11 +29,11 @@ interface searchListProps {
 
 const SearchList = ({ keyword }: searchListProps) => {
     const navigate = useNavigate();
-    const BASE_PATH = "https://api.themoviedb.org/3";
-    const API_KEY = '36eac08768828f2c4e7cd1f7365d208d';
     const [data, setData] = useState<IGetSearchMedia>();
     const onBoxClick = (id: number, mediaType: string) => navigate(`/search/${mediaType}/${id}`);
     useEffect(() => {
+        const BASE_PATH = "https://api.themoviedb.org/3";
+        const API_KEY = process.env.REACT_APP_MOVIEDB_APIKEY;
         fetch(`${BASE_PATH}/search/multi?api_key=${API_KEY}&language=ko&query=${keyword}`)
             .then((response) => response.json())
             .then(data => setData(data));
